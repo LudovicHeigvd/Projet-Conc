@@ -6,18 +6,27 @@ package com.company;
 
 public class Bucheron extends Thread
 {
-   private Benne beinne;
-    public Bucheron(Benne benne){
-
+   private Benne benne;
+    private Observateur monObs;
+    private boolean travail= true;
+    private int i;
+    public Bucheron(Observateur obs) {
+        monObs=obs;
     }
-    public static   boolean travail = true;
     public void run() {
         int tours = 0;
         while (tours <= 100)
         {
             if(travail) {
-                try {
+                try{
+                    System.out.println("le bucheron coupe du bois");
                     Thread.sleep((long) Math.ceil(Math.random() * 100));//couper du bois
+                    System.out.println("le bucheronamène tout le bois vers la benne");
+                    Thread.sleep((long) Math.ceil(Math.random() * 100));//aème le bois vers la beine
+                    System.out.println("le bucheron remplis la benne");
+                    remplir(monObs.mesnenes[i]);
+                    i++;
+                    i=i%3;
                 } catch (InterruptedException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
@@ -31,13 +40,12 @@ public class Bucheron extends Thread
         }
         travail =false;
     }
-    private  synchronized void remplir(Benne beinne)
+    private  synchronized void remplir(Benne benne)
     {
-        this.beinne =beinne;
         int i=1;
-        while(!beinne.Ispleine())
+        while(!benne.Ispleine())
         {
-            this.beinne.SetCapacity(i);
+            benne.SetCapacity(i);
             i++;
         }
     }
