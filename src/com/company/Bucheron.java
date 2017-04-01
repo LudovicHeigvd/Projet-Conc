@@ -8,10 +8,12 @@ public class Bucheron extends Thread
 {
    private Benne benne;
     private Observateur monObs;
+    private Echangeur monech;
     private boolean travail= true;
     private int i;
-    public Bucheron(Observateur obs) {
+    public Bucheron(Observateur obs,Echangeur ech) {
         monObs=obs;
+        monech = ech;
     }
     public void run() {
         int tours = 0;
@@ -24,7 +26,13 @@ public class Bucheron extends Thread
                     System.out.println("le bucheronamène tout le bois vers la benne");
                     Thread.sleep((long) Math.ceil(Math.random() * 100));//aème le bois vers la beine
                     System.out.println("le bucheron remplis la benne");
-                    remplir(monObs.mesnenes[i]);
+                    if(monObs.mesnenes[i].IsVIde()) {
+                        remplir(monObs.mesnenes[i]);
+                    }
+                    else
+                    {
+                        monech.evalCouple(1,2,monObs.mesnenes[i]);
+                    }
                     i++;
                     i=i%3;
                 } catch (InterruptedException e) {
