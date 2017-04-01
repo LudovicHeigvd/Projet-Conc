@@ -5,5 +5,55 @@ package com.company;
  */
 public class Ouvrier extends Thread
 {
-
+    Observateur monObs;
+    Echangeur monech;
+    int i;
+    public Ouvrier(Observateur obs,Echangeur ech) {
+        monObs=obs;
+        monech = ech;
+    }
+    boolean travail =true;
+    public void run() {
+        int tours = 0;
+        while (tours <= 100)
+        {
+            if(travail) {
+                try{
+                    System.out.println("le bucheron coupe du bois");
+                    Thread.sleep((long) Math.ceil(Math.random() * 100));//couper du bois
+                    System.out.println("le bucheronamène tout le bois vers la benne");
+                    Thread.sleep((long) Math.ceil(Math.random() * 100));//aème le bois vers la beine
+                    System.out.println("le bucheron remplis la benne");
+                    if(monObs.mesnenes[i].IsVIde()) {
+                        System.out.println("le bucheron remplis la benne");
+                        Vider(monObs.mesnenes[i]);
+                    }
+                    else
+                    {
+                        monech.evalCouple(1,2,monObs.mesnenes[i]);
+                    }
+                    i++;
+                    i=i%3;
+                } catch (InterruptedException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }
+            else
+            {
+                break;
+            }
+            tours ++;
+        }
+        travail =false;
+    }
+    private  synchronized void Vider (Benne benne)
+    {
+        int i=benne.GetMax();
+        while(!benne.IsVIde())
+        {
+            benne.SetCapacity(i);
+            i--;
+        }
+    }
 }

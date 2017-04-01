@@ -11,6 +11,10 @@ public  class  Benne
     {
        this.capacity =capacity;
     }
+    public int GetMax()
+    {
+        return max;
+    }
     public synchronized boolean Ispleine()
     {
         return this.capacity == max;

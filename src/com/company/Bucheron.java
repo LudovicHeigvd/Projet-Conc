@@ -27,6 +27,7 @@ public class Bucheron extends Thread
                     Thread.sleep((long) Math.ceil(Math.random() * 100));//aème le bois vers la beine
                     System.out.println("le bucheron remplis la benne");
                     if(monObs.mesnenes[i].IsVIde()) {
+                        System.out.println("le bucheron remplis la benne");
                         remplir(monObs.mesnenes[i]);
                     }
                     else
