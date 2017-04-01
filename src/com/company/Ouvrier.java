@@ -17,7 +17,7 @@ public class Ouvrier extends Thread
         int tours = 0;
         while (tours <= 100)
         {
-            if(travail) {
+            if(monObs.travail) {
                 try{
                     System.out.println("le bucheron coupe du bois");
                     Thread.sleep((long) Math.ceil(Math.random() * 100));//couper du bois
@@ -45,7 +45,7 @@ public class Ouvrier extends Thread
             }
             tours ++;
         }
-        travail =false;
+       monObs.travail =false;
     }
     private  synchronized void Vider (Benne benne)
     {

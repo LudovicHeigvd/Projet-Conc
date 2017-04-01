@@ -5,6 +5,7 @@ package com.company;
  */
 
 public class Observateur {
+    public static boolean travail=true;
     private   Benne benne1 = new Benne(0);
     private  Benne benne2 = new Benne(0);
     private  Benne benne3 = new Benne(0);

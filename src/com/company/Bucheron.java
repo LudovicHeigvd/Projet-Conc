@@ -9,7 +9,6 @@ public class Bucheron extends Thread
    private Benne benne;
     private Observateur monObs;
     private Echangeur monech;
-    private boolean travail= true;
     private int i =0;
     public Bucheron(Observateur obs,Echangeur ech) {
         monObs=obs;
@@ -19,7 +18,7 @@ public class Bucheron extends Thread
         int tours = 0;
         while (tours <= 100)
         {
-            if(travail) {
+            if(monObs.travail) {
                 try{
                     System.out.println("le bucheron coupe du bois");
                     Thread.sleep((long) Math.ceil(Math.random() * 100));//couper du bois
@@ -54,7 +53,7 @@ public class Bucheron extends Thread
             }
            tours ++;
         }
-        travail =false;
+        monObs.travail =false;
     }
     private  synchronized void remplir(Benne benne)
     {
