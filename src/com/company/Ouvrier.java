@@ -30,7 +30,14 @@ public class Ouvrier extends Thread
                     }
                     else
                     {
-                        monech.evalCouple(1,2,monObs.mesnenes[i]);
+                        int j=i+1%3;
+                        if(monObs.mesnenes[j].Ispleine()) {
+                            monech.evalCouple(i,1, monObs.mesnenes[i]);
+                        }
+                        else
+                        {
+                            monObs.ModifStatus(false,2);
+                        }
                     }
                     i++;
                     i=i%3;
