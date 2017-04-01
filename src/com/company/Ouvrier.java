@@ -7,7 +7,7 @@ public class Ouvrier extends Thread
 {
     Observateur monObs;
     Echangeur monech;
-    int i;
+    int i=2;
     public Ouvrier(Observateur obs,Echangeur ech) {
         monObs=obs;
         monech = ech;

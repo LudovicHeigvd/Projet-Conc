@@ -5,7 +5,7 @@ package com.company;
  */
 public class Echangeur {
 
-    boolean PoteFini=false;
+    boolean travail=true;
     Observateur monObs;
     boolean bloque=false;
 
@@ -38,7 +38,7 @@ public class Echangeur {
     public synchronized void evalCouple(int i, int j, Benne zone){
         //monObs.modifStatus(i); //ici changement de statut du pompier 2 se ferait deux fois de suite
         //ATTENTION: On modifie systématiquement le status même si l'échange précédent n'a pas eu lieu
-        if (!PoteFini){
+        if (travail){
             if (monObs.getStatus(i)==zone){
                 essaiEchange(i,j,zone);
             }
@@ -48,7 +48,7 @@ public class Echangeur {
     public synchronized void lastEvalCouple(int i, int j, char zone){
         notify();//sinon un pote en mode wait serait bloqué indéfiniment
         bloque=false;
-        PoteFini=true;
+        travail=false;
         System.out.println("dernier état pour "+i+" ça ne sert à rien de changer");
     }
 }

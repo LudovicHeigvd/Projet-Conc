@@ -10,7 +10,7 @@ public class Bucheron extends Thread
     private Observateur monObs;
     private Echangeur monech;
     private boolean travail= true;
-    private int i;
+    private int i =0;
     public Bucheron(Observateur obs,Echangeur ech) {
         monObs=obs;
         monech = ech;
@@ -32,7 +32,14 @@ public class Bucheron extends Thread
                     }
                     else
                     {
-                        monech.evalCouple(1,2,monObs.mesnenes[i]);
+                        int j=i+1%3;
+                        if(monObs.mesnenes[j].IsVIde()) {
+                            monech.evalCouple(1, 2, monObs.mesnenes[i]);
+                        }
+                        else
+                        {
+                            //block
+                        }
                     }
                     i++;
                     i=i%3;
