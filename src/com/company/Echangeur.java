@@ -16,32 +16,46 @@ public class Echangeur {
         if (monObs.GetStatus(j)==false){
             bloque=false;
             notify();
-            System.out.println("l'échange peut avoir lieu entre "+ i + " et "+j);
+            System.out.println("l'échange peut avoir lieu");
+
             //System.out.println("le vecteur courant après l'échange vaut "+monObs.getStatus(1)+" "+monObs.getStatus(2)+" "+monObs.getStatus(3));
+
         } else {
             bloque=true;
             while (bloque){
-                System.out.println("on bloque le thread courant "+i+" car "+j+" n'est pas encore arrivé");
+                String nom;
+                switch (j) {
+                    case 0:
+                        nom ="Bucheron";
+                        break;
+                    case 1:
+                        nom="Transporteur" ; break;
+                    case 2:
+                        nom = "Ouvrier"; break;
+                    default:
+                        nom ="alien";
+                }
+                System.out.println("on bloque le thread courant "+nom);
                 try {
                     wait();
                 } catch (InterruptedException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
-                System.out.println("on débloque le thread courant "+i+" grâce à "+j);
+                System.out.println("on débloque le thread "+nom);
             }
         }
-        monObs.modifStatus(i);
+        monObs.ModifStatus(true,j);
     }
 
     public synchronized void evalCouple(int i, int j, Benne zone){
         //monObs.modifStatus(i); //ici changement de statut du pompier 2 se ferait deux fois de suite
         //ATTENTION: On modifie systématiquement le status même si l'échange précédent n'a pas eu lieu
         if (monObs.travail){
-            if (monObs.getStatus(i)==zone){
+
                 essaiEchange(i,j,zone);
-            }
-        } else System.out.println("ça ne sert à rien de continuer pour "+i+" car son pote a fini");
+
+        } else System.out.println("ça ne sert à rien de continuer pour car son pote a fini");
     }
 
     public synchronized void lastEvalCouple(int i, int j, char zone){
