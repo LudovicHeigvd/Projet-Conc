@@ -10,14 +10,15 @@ public class Observateur {
     private  Benne benne2 = new Benne(0);
     private  Benne benne3 = new Benne(0);
     public  Benne mesnenes[]={benne1,benne2,benne3};
-    int monVecteurCode[]={0,2,1};
+    public boolean status[]={true,true,true};
 
-    synchronized  Benne getStatus(int i){
-        return mesnenes[i];
+    synchronized  boolean GetStatus(int i){
+        return status[i];
     }
 
-    synchronized  void modifStatus(int i){
+    synchronized  void  ModifStatus(boolean value, int i){
 
+        status[i]=value;
     }
 
 	/*synchronized  void modifStatusCouple(int i, int j){

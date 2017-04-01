@@ -33,11 +33,11 @@ public class Bucheron extends Thread
                     {
                         int j=i+1%3;
                         if(monObs.mesnenes[j].IsVIde()) {
-                            monech.evalCouple(1, 2, monObs.mesnenes[i]);
+                            monech.evalCouple(i,1, monObs.mesnenes[i]);
                         }
                         else
                         {
-                            //block
+                            monObs.ModifStatus(false,0);
                         }
                     }
                     i++;
