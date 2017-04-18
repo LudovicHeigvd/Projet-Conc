@@ -52,7 +52,9 @@ public class Transporteur extends Thread
         Benne  benne = bennesUsineTranspot.getFirst();
         bennesUsineTranspot.removeFirst();
         monObs.ModifStatus(true,1);
-        TransportToOuvrier(benne);
+        if(monObs.travail) {
+            TransportToOuvrier(benne);
+        }
     }
 
     private synchronized void TransportToOuvrier(Benne benne)throws InterruptedException{
@@ -62,7 +64,9 @@ public class Transporteur extends Thread
         if(monObs.GetStatus(2)==false) {
             monObs.essaiEchange(2);
         }
-        AmareAtOuvrier();
+        if(monObs.travail) {
+            AmareAtOuvrier();
+        }
     }
 
     private synchronized void AmareAtOuvrier() throws InterruptedException{
@@ -75,7 +79,9 @@ public class Transporteur extends Thread
         Benne benne = bennesForetTransport.getFirst();
         bennesForetTransport.removeFirst();
         monObs.ModifStatus(true,1);
-        TransportToBucheron(benne);
+        if(monObs.travail) {
+            TransportToBucheron(benne);
+        }
     }
 
     private synchronized void TransportToBucheron(Benne benne) throws InterruptedException{
@@ -85,6 +91,8 @@ public class Transporteur extends Thread
         if(monObs.GetStatus(0)==false) {
             monObs.essaiEchange(0);
         }
-        AmmarerBuecheron();
+        if(monObs.travail) {
+            AmmarerBuecheron();
+        }
     }
 }
