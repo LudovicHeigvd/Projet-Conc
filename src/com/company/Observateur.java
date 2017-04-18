@@ -9,15 +9,15 @@ public class Observateur {
     private int capacity=255;
     private  boolean  status[]={true,true,true}; // true = travail false = block 0= bu 1= trans 2 = ouvr
     private boolean bloque;
-    synchronized  boolean GetStatus(int i){
+    public synchronized  boolean GetStatus(int i){
         return status[i];
     }
 
-    synchronized  void  ModifStatus(boolean value, int i){
+   public synchronized  void  ModifStatus(boolean value, int i){
 
         status[i]=value;
     }
-    synchronized int GetCapacity()
+    public synchronized int GetCapacity()
     {
       return capacity;
     }
@@ -30,9 +30,6 @@ public class Observateur {
             bloque=false;
             notifyAll();
             System.out.println("l'échange peut avoir lieu");
-
-            //System.out.println("le vecteur courant après l'échange vaut "+monObs.getStatus(1)+" "+monObs.getStatus(2)+" "+monObs.getStatus(3));
-
         } else {
             bloque=true;
                 while (bloque){
@@ -48,14 +45,13 @@ public class Observateur {
                     default:
                         nom ="alien";
                 }
-                System.out.println("on attends le tread pour débloquer la situation "+nom);
+                System.out.println("on attends le tread "+nom+ " pour débloquer la situation ");
                 try {
                     wait();
                 } catch (InterruptedException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
-                System.out.println("on débloque le thread "+nom);
             }
         }
         this.ModifStatus(true,j);

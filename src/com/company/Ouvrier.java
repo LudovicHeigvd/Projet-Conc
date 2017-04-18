@@ -1,5 +1,6 @@
 package com.company;
 
+import javax.sound.midi.SysexMessage;
 import java.util.LinkedList;
 
 /**
@@ -50,6 +51,8 @@ public class Ouvrier extends Thread
             tours ++;
         }
         monObs.travail =false;
+        System.out.println("fin de l'ouvrier");
+        this.interrupt();
     }
     private  synchronized void Vider (Benne benne)
     {

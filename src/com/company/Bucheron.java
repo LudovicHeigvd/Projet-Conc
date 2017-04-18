@@ -55,6 +55,8 @@ public class Bucheron extends Thread
            tours ++;
         }
         monObs.travail =false;
+        System.out.println("fin du bucheron");
+        this.interrupt();
     }
     private  synchronized void remplir(Benne benne)
     {

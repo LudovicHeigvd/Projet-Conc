@@ -36,9 +36,13 @@ public class Transporteur extends Thread
             } catch (InterruptedException e) {
                 System.out.println(e.toString());
             }
+
         }
+        System.out.println("fin du transporteur");
+        this.interrupt();
+
     }
-    public void AmmarerBuecheron()throws InterruptedException  {
+    private synchronized void AmmarerBuecheron()throws InterruptedException  {
         System.out.println("Amène la benne en forêt");
         Thread.sleep((long) Math.ceil(Math.random() * 100));
         if(bennesUsineTranspot.size()==0) {
@@ -51,7 +55,7 @@ public class Transporteur extends Thread
         TransportToOuvrier(benne);
     }
 
-    public void TransportToOuvrier(Benne benne)throws InterruptedException{
+    private synchronized void TransportToOuvrier(Benne benne)throws InterruptedException{
         System.out.println("donne la benne à l'ouvrier");
         Thread.sleep((long) Math.ceil(Math.random() * 100));
         bennesUsineVider.addLast(benne);
@@ -61,7 +65,7 @@ public class Transporteur extends Thread
         AmareAtOuvrier();
     }
 
-    public void AmareAtOuvrier() throws InterruptedException{
+    private synchronized void AmareAtOuvrier() throws InterruptedException{
         Thread.sleep((long) Math.ceil(Math.random() * 100));
         System.out.println("Prends la benne vide dans l'usine");
         if(bennesForetTransport.size()==0) {
@@ -74,7 +78,7 @@ public class Transporteur extends Thread
         TransportToBucheron(benne);
     }
 
-    public void TransportToBucheron(Benne benne) throws InterruptedException{
+    private synchronized void TransportToBucheron(Benne benne) throws InterruptedException{
         Thread.sleep((long) Math.ceil(Math.random() * 100));
         System.out.println("Amène la benne vide chez le bucheron");
         bennesForetRemplir.addLast(benne);
