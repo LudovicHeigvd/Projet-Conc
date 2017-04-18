@@ -1,18 +1,23 @@
 package com.company;
 
+import com.sun.org.apache.xpath.internal.functions.FuncFalse;
+
+import java.util.LinkedList;
 /**
  * Created by ludovic on 31/03/2017.
  */
 
 public class Bucheron extends Thread
 {
-   private Benne benne;
+    private LinkedList<Benne> bennesARemplir;
+    private LinkedList<Benne> bennesATransporter;
     private Observateur monObs;
-    private Echangeur monech;
-    private int i =0;
-    public Bucheron(Observateur obs,Echangeur ech) {
-        monObs=obs;
-        monech = ech;
+    public Bucheron(LinkedList<Benne> bennesForetRemplir,LinkedList<Benne> bennesUsineTranspot,Observateur obs) {
+        this.bennesARemplir =bennesForetRemplir;
+        this.bennesATransporter =bennesUsineTranspot;
+        this.monObs=obs;
+        Benne benne = new Benne(0);
+        this.bennesARemplir.add((benne));
     }
     public void run() {
         int tours = 0;
@@ -20,28 +25,24 @@ public class Bucheron extends Thread
         {
             if(monObs.travail) {
                 try{
+                    monObs.ModifStatus(true,0);
                     System.out.println("le bucheron coupe du bois");
                     Thread.sleep((long) Math.ceil(Math.random() * 100));//couper du bois
-                    System.out.println("le bucheronamène tout le bois vers la benne");
+                    System.out.println("le bucheron amène tout le bois vers la benne");
                     Thread.sleep((long) Math.ceil(Math.random() * 100));//aème le bois vers la beine
                     System.out.println("le bucheron remplis la benne");
-                    if(monObs.mesnenes[i].IsVIde()) {
-                        System.out.println("le bucheron remplis la benne");
-                        remplir(monObs.mesnenes[i]);
+
+                    if(bennesARemplir.size()!=0) {
+                        Benne ben = (Benne) bennesARemplir.getFirst();
+                        bennesARemplir.removeFirst();
+                        remplir(ben);
                     }
                     else
                     {
-                        int j=i+1%3;
-                        if(monObs.mesnenes[j].IsVIde()) {
-                            monech.evalCouple(i,1, monObs.mesnenes[i]);
-                        }
-                        else
-                        {
-                            monObs.ModifStatus(false,0);
-                        }
+                        monObs.ModifStatus(false,0);
+                       monObs.essaiEchange(1);
+
                     }
-                    i++;
-                    i=i%3;
                 } catch (InterruptedException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
@@ -62,6 +63,11 @@ public class Bucheron extends Thread
         {
             benne.SetCapacity(i);
             i++;
+        }
+        bennesATransporter.addLast(benne);
+        if(monObs.GetStatus(1)== false)
+        {
+            monObs.essaiEchange(1);
         }
     }
 }

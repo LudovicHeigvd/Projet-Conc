@@ -1,46 +1,43 @@
 package com.company;
 
+import java.util.LinkedList;
+
 /**
  * Created by ludovic on 31/03/2017.
  */
 public class Ouvrier extends Thread
 {
-    Observateur monObs;
-    Echangeur monech;
-    int i=2;
-    public Ouvrier(Observateur obs,Echangeur ech) {
-        monObs=obs;
-        monech = ech;
+    private LinkedList<Benne> bennesAvider;
+    private LinkedList<Benne> bennesATransporter;
+    private Observateur monObs;
+    public Ouvrier(LinkedList<Benne> bennesUsineVider,LinkedList<Benne> bennesForetTransport,Observateur obs) {
+        this.bennesAvider =bennesUsineVider;
+        this.bennesATransporter =bennesForetTransport;
+        this.monObs=obs;
+        Benne benne = new Benne(monObs.GetCapacity());
+        this.bennesAvider.addLast((benne));
     }
-    boolean travail =true;
     public void run() {
         int tours = 0;
         while (tours <= 100)
         {
             if(monObs.travail) {
                 try{
-                    System.out.println("le bucheron coupe du bois");
-                    Thread.sleep((long) Math.ceil(Math.random() * 100));//couper du bois
-                    System.out.println("le bucheronamène tout le bois vers la benne");
-                    Thread.sleep((long) Math.ceil(Math.random() * 100));//aème le bois vers la beine
-                    System.out.println("le bucheron remplis la benne");
-                    if(monObs.mesnenes[i].IsVIde()) {
-                        System.out.println("le bucheron remplis la benne");
-                        Vider(monObs.mesnenes[i]);
+                    System.out.println("l'ouvrier travail");
+                    monObs.ModifStatus(true,2);
+                       if(bennesAvider.size()!=0) {
+                        Benne ben = (Benne) bennesAvider.getFirst();
+                        bennesAvider.removeFirst();
+                           System.out.println("l 'ouvrier vide la benne");
+                           Thread.sleep((long) Math.ceil(Math.random() * 100));//couper du bois
+                        Vider(ben);
                     }
                     else
                     {
-                        int j=i+1%3;
-                        if(monObs.mesnenes[j].Ispleine()) {
-                            monech.evalCouple(i,1, monObs.mesnenes[i]);
-                        }
-                        else
-                        {
-                            monObs.ModifStatus(false,2);
-                        }
+                        monObs.ModifStatus(false,2);
+                        monObs.essaiEchange(1);
+
                     }
-                    i++;
-                    i=i%3;
                 } catch (InterruptedException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
@@ -52,7 +49,7 @@ public class Ouvrier extends Thread
             }
             tours ++;
         }
-       monObs.travail =false;
+        monObs.travail =false;
     }
     private  synchronized void Vider (Benne benne)
     {
@@ -61,6 +58,10 @@ public class Ouvrier extends Thread
         {
             benne.SetCapacity(i);
             i--;
+        }
+        bennesATransporter.addLast(benne);
+        if(monObs.GetStatus(1)==false) {
+            monObs.essaiEchange(1);
         }
     }
 }
