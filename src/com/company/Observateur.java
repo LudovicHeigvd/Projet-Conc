@@ -56,11 +56,4 @@ public class Observateur {
         }
         this.ModifStatus(true,j);
     }
-
-    public synchronized void lastEvalCouple(int i, int j, char zone){
-        notify();//sinon un pote en mode wait serait bloqué indéfiniment
-        bloque=false;
-        this.travail=false;
-        System.out.println("dernier état pour "+i+" ça ne sert à rien de changer");
-    }
 }

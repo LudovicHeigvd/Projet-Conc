@@ -16,7 +16,7 @@ public class Ouvrier extends Thread
         this.bennesATransporter =bennesForetTransport;
         this.monObs=obs;
         Benne benne = new Benne(monObs.GetCapacity());
-        this.bennesAvider.addLast((benne));
+        this.bennesAvider.addLast(benne);
     }
     public void run() {
         int tours = 0;
@@ -26,19 +26,8 @@ public class Ouvrier extends Thread
                 try{
                     System.out.println("l'ouvrier travail");
                     monObs.ModifStatus(true,2);
-                       if(bennesAvider.size()!=0) {
-                        Benne ben = (Benne) bennesAvider.getFirst();
-                        bennesAvider.removeFirst();
-                           System.out.println("l 'ouvrier vide la benne");
-                           Thread.sleep((long) Math.ceil(Math.random() * 100));//couper du bois
-                        Vider(ben);
-                    }
-                    else
-                    {
-                        monObs.ModifStatus(false,2);
-                        monObs.essaiEchange(1);
-
-                    }
+                    Thread.sleep((long) Math.ceil(Math.random() * 100));
+                    ViderBenne();
                 } catch (InterruptedException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
@@ -65,6 +54,21 @@ public class Ouvrier extends Thread
         bennesATransporter.addLast(benne);
         if(monObs.GetStatus(1)==false) {
             monObs.essaiEchange(1);
+        }
+    }
+    private  synchronized  void ViderBenne()
+    {
+        if(bennesAvider.size()!=0) {
+            Benne ben = (Benne) bennesAvider.getFirst();
+            bennesAvider.removeFirst();
+            System.out.println("l 'ouvrier vide la benne");
+            Vider(ben);
+        }
+        else
+        {
+            monObs.ModifStatus(false,2);
+            monObs.essaiEchange(1);
+
         }
     }
 }

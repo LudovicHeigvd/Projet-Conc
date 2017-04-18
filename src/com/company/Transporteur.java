@@ -24,8 +24,8 @@ public class Transporteur extends Thread
         this.bennesUsineVider = bennesUsineVider;
         this.bennesUsineTranspot = bennesUsineTranspot;
         this.monObs=obs;
-        Benne benne = new Benne(0);
-        bennesForetTransport.add(benne);
+        Benne benne = new Benne(monObs.GetCapacity());
+        bennesUsineTranspot.addLast(benne);
     }
     public void run(){
         while (monObs.travail){
@@ -43,10 +43,10 @@ public class Transporteur extends Thread
 
     }
     private synchronized void AmmarerBuecheron()throws InterruptedException  {
-        System.out.println("Amène la benne en forêt");
+        System.out.println(" le transporteur amène la benne en forêt");
         Thread.sleep((long) Math.ceil(Math.random() * 100));
-        if(bennesUsineTranspot.size()==0) {
-            monObs.ModifStatus(false,1);
+        if (bennesUsineTranspot.size()==0) {
+            monObs.ModifStatus(false, 1);
             monObs.essaiEchange(0);
         }
         Benne  benne = bennesUsineTranspot.getFirst();
@@ -58,7 +58,7 @@ public class Transporteur extends Thread
     }
 
     private synchronized void TransportToOuvrier(Benne benne)throws InterruptedException{
-        System.out.println("donne la benne à l'ouvrier");
+        System.out.println(" le transporteur donne la benne à l'ouvrier");
         Thread.sleep((long) Math.ceil(Math.random() * 100));
         bennesUsineVider.addLast(benne);
         if(monObs.GetStatus(2)==false) {
@@ -71,7 +71,7 @@ public class Transporteur extends Thread
 
     private synchronized void AmareAtOuvrier() throws InterruptedException{
         Thread.sleep((long) Math.ceil(Math.random() * 100));
-        System.out.println("Prends la benne vide dans l'usine");
+        System.out.println(" le transporteur prends la benne vide dans l'usine");
         if(bennesForetTransport.size()==0) {
             monObs.ModifStatus(false,1);
             monObs.essaiEchange(2);
@@ -86,7 +86,7 @@ public class Transporteur extends Thread
 
     private synchronized void TransportToBucheron(Benne benne) throws InterruptedException{
         Thread.sleep((long) Math.ceil(Math.random() * 100));
-        System.out.println("Amène la benne vide chez le bucheron");
+        System.out.println(" le transporteur amène la benne vide chez le bucheron");
         bennesForetRemplir.addLast(benne);
         if(monObs.GetStatus(0)==false) {
             monObs.essaiEchange(0);

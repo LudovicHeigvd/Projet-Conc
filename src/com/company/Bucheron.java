@@ -17,7 +17,7 @@ public class Bucheron extends Thread
         this.bennesATransporter =bennesUsineTranspot;
         this.monObs=obs;
         Benne benne = new Benne(0);
-        this.bennesARemplir.add((benne));
+        this.bennesARemplir.addLast(benne);
     }
     public void run() {
         int tours = 0;
@@ -31,18 +31,7 @@ public class Bucheron extends Thread
                     System.out.println("le bucheron amène tout le bois vers la benne");
                     Thread.sleep((long) Math.ceil(Math.random() * 100));//aème le bois vers la beine
                     System.out.println("le bucheron remplis la benne");
-
-                    if(bennesARemplir.size()!=0) {
-                        Benne ben = (Benne) bennesARemplir.getFirst();
-                        bennesARemplir.removeFirst();
-                        remplir(ben);
-                    }
-                    else
-                    {
-                        monObs.ModifStatus(false,0);
-                       monObs.essaiEchange(1);
-
-                    }
+                    Prendrebenne();
                 } catch (InterruptedException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
@@ -58,7 +47,7 @@ public class Bucheron extends Thread
         System.out.println("fin du bucheron");
         this.interrupt();
     }
-    private  synchronized void remplir(Benne benne)
+    private  synchronized void Remplir(Benne benne)
     {
         int i=1;
         while(!benne.Ispleine())
@@ -70,6 +59,20 @@ public class Bucheron extends Thread
         if(monObs.GetStatus(1)== false)
         {
             monObs.essaiEchange(1);
+        }
+    }
+    private synchronized void Prendrebenne()
+    {
+        if(bennesARemplir.size()!=0) {
+            Benne ben = (Benne) bennesARemplir.getFirst();
+            bennesARemplir.removeFirst();
+            Remplir(ben);
+        }
+        else
+        {
+            monObs.ModifStatus(false,0);
+            monObs.essaiEchange(1);
+
         }
     }
 }
