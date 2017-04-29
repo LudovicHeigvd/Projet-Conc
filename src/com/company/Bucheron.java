@@ -31,7 +31,9 @@ public class Bucheron extends Thread
                     System.out.println("le bucheron amène tout le bois vers la benne");
                     Thread.sleep((long) Math.ceil(Math.random() * 100));//aème le bois vers la beine
                     System.out.println("le bucheron remplis la benne");
-                    Prendrebenne();
+                    if(monObs.travail)
+                    {
+                    Prendrebenne();}
                 } catch (InterruptedException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();

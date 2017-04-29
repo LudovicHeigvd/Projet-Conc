@@ -27,7 +27,9 @@ public class Ouvrier extends Thread
                     System.out.println("l'ouvrier travail");
                     monObs.ModifStatus(true,2);
                     Thread.sleep((long) Math.ceil(Math.random() * 100));
-                    ViderBenne();
+                    if(monObs.travail)
+                    {
+                    ViderBenne();}
                 } catch (InterruptedException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();

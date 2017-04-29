@@ -32,7 +32,17 @@ public class Transporteur extends Thread
             try {
                 Benne benne = null;
                 monObs.ModifStatus(true,1);
-                AmmarerBuecheron();
+                benne=AmmarerBuecheron();
+                if(monObs.travail) {
+                    TransportToOuvrier(benne);
+                }
+                if(monObs.travail) {
+                    AmareAtOuvrier();
+                }
+                if(monObs.travail) {
+                    TransportToBucheron(benne);
+                }
+
             } catch (InterruptedException e) {
                 System.out.println(e.toString());
             }
@@ -42,7 +52,7 @@ public class Transporteur extends Thread
         this.interrupt();
 
     }
-    private synchronized void AmmarerBuecheron()throws InterruptedException  {
+    private synchronized Benne AmmarerBuecheron()throws InterruptedException  {
         System.out.println(" le transporteur amène la benne en forêt");
         Thread.sleep((long) Math.ceil(Math.random() * 100));
         if (bennesUsineTranspot.size()==0) {
@@ -52,9 +62,7 @@ public class Transporteur extends Thread
         Benne  benne = bennesUsineTranspot.getFirst();
         bennesUsineTranspot.removeFirst();
         monObs.ModifStatus(true,1);
-        if(monObs.travail) {
-            TransportToOuvrier(benne);
-        }
+        return benne;
     }
 
     private synchronized void TransportToOuvrier(Benne benne)throws InterruptedException{
@@ -64,12 +72,10 @@ public class Transporteur extends Thread
         if(monObs.GetStatus(2)==false) {
             monObs.essaiEchange(2);
         }
-        if(monObs.travail) {
-            AmareAtOuvrier();
-        }
+
     }
 
-    private synchronized void AmareAtOuvrier() throws InterruptedException{
+    private synchronized Benne AmareAtOuvrier() throws InterruptedException{
         Thread.sleep((long) Math.ceil(Math.random() * 100));
         System.out.println(" le transporteur prends la benne vide dans l'usine");
         if(bennesForetTransport.size()==0) {
@@ -79,9 +85,7 @@ public class Transporteur extends Thread
         Benne benne = bennesForetTransport.getFirst();
         bennesForetTransport.removeFirst();
         monObs.ModifStatus(true,1);
-        if(monObs.travail) {
-            TransportToBucheron(benne);
-        }
+        return  benne;
     }
 
     private synchronized void TransportToBucheron(Benne benne) throws InterruptedException{
@@ -91,8 +95,5 @@ public class Transporteur extends Thread
         if(monObs.GetStatus(0)==false) {
             monObs.essaiEchange(0);
         }
-        if(monObs.travail) {
-            AmmarerBuecheron();
-        }
-    }
+     }
 }
