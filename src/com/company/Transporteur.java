@@ -32,7 +32,9 @@ public class Transporteur extends Thread
             try {
                 Benne benne = null;
                 monObs.ModifStatus(true,1);
-                benne=AmmarerBuecheron();
+                if(monObs.travail) {
+                    benne = AmmarerBuecheron();
+                }
                 if(monObs.travail) {
                     TransportToOuvrier(benne);
                 }
@@ -55,7 +57,7 @@ public class Transporteur extends Thread
     private synchronized Benne AmmarerBuecheron()throws InterruptedException  {
         System.out.println(" le transporteur amène la benne en forêt");
         Thread.sleep((long) Math.ceil(Math.random() * 100));
-        if (bennesUsineTranspot.size()==0) {
+        while (bennesUsineTranspot.size()==0) {
             monObs.ModifStatus(false, 1);
             monObs.essaiEchange(0);
         }
@@ -78,7 +80,7 @@ public class Transporteur extends Thread
     private synchronized Benne AmareAtOuvrier() throws InterruptedException{
         Thread.sleep((long) Math.ceil(Math.random() * 100));
         System.out.println(" le transporteur prends la benne vide dans l'usine");
-        if(bennesForetTransport.size()==0) {
+        while(bennesForetTransport.size()==0) {
             monObs.ModifStatus(false,1);
             monObs.essaiEchange(2);
         }

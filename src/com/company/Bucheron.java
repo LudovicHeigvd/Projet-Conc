@@ -75,7 +75,6 @@ public class Bucheron extends Thread
         {
             monObs.ModifStatus(false,0);
             monObs.essaiEchange(1);
-
         }
     }
 }

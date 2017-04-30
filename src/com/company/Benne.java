@@ -26,11 +26,11 @@ public  class  Benne
     public synchronized  void SetCapacity(int kilos) { capacity =kilos;}
     public synchronized  void Addtronc(int kilos)
     {
-        capacity+=kilos;
+        capacity=capacity+kilos;
     }
     public synchronized  void Removetronc(int kilos)
     {
-        capacity=-kilos;
+        capacity=capacity-kilos;
     }
 
 }
