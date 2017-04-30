@@ -3,6 +3,9 @@ package com.company;
 import com.sun.org.apache.xpath.internal.functions.FuncFalse;
 
 import java.util.LinkedList;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
 /**
  * Created by ludovic on 31/03/2017.
  */
@@ -11,6 +14,8 @@ public class Bucheron extends Thread
 {
     private LinkedList<Benne> bennesARemplir;
     private LinkedList<Benne> bennesATransporter;
+    private Lock lockRemplir = new ReentrantLock();
+    private Lock lockPrendreBenne = new ReentrantLock();
     private Observateur monObs;
 
     public Bucheron(LinkedList<Benne> bennesForetRemplir,LinkedList<Benne> bennesUsineTranspot,Observateur obs) {
@@ -50,32 +55,40 @@ public class Bucheron extends Thread
         System.out.println("fin du bucheron");
         this.interrupt();
     }
-    private  synchronized void Remplir(Benne benne)
+    private void Remplir(Benne benne)
     {
-        if(!benne.Ispleine())
-        {
-            benne.Addtronc(25);
-            bennesARemplir.addFirst(benne);
-        }
-        else {
-            bennesATransporter.addLast(benne);
-            if (monObs.GetStatus(1) == false) {
-                monObs.essaiEchange(1);
+        lockRemplir.lock();
+        try {
+            if (!benne.Ispleine()) {
+                benne.Addtronc(25);
+                bennesARemplir.addFirst(benne);
+            } else {
+                bennesATransporter.addLast(benne);
+                if (monObs.GetStatus(1) == false) {
+                    monObs.essaiEchange(1);
+                }
             }
         }
-    }
-    private synchronized void Prendrebenne()
-    {
-        if(bennesARemplir.size()!=0) {
-            Benne ben = (Benne) bennesARemplir.getFirst();
-            bennesARemplir.removeFirst();
-            Remplir(ben);
+        finally {
+            lockRemplir.unlock();
         }
-        else
-        {
-            monObs.ModifStatus(false,0);
-            monObs.essaiEchange(1);
+    }
+    private  void Prendrebenne()
+    {
+        lockPrendreBenne.lock();
+        try {
+            if (bennesARemplir.size() != 0) {
+                Benne ben = (Benne) bennesARemplir.getFirst();
+                bennesARemplir.removeFirst();
+                Remplir(ben);
+            } else {
+                monObs.ModifStatus(false, 0);
+                monObs.essaiEchange(1);
 
+            }
+        }
+        finally {
+            lockPrendreBenne.unlock();
         }
     }
 }

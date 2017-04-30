@@ -2,6 +2,8 @@ package com.company;
 
 import javax.sound.midi.SysexMessage;
 import java.util.LinkedList;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Created by ludovic on 31/03/2017.
@@ -11,12 +13,16 @@ public class Ouvrier extends Thread
     private LinkedList<Benne> bennesAvider;
     private LinkedList<Benne> bennesATransporter;
     private Observateur monObs;
+    private Lock lockVider = new ReentrantLock();
+    private Lock lockAvider = new ReentrantLock();
+
     public Ouvrier(LinkedList<Benne> bennesUsineVider,LinkedList<Benne> bennesForetTransport,Observateur obs) {
         this.bennesAvider =bennesUsineVider;
         this.bennesATransporter =bennesForetTransport;
         this.monObs=obs;
         Benne benne = new Benne(monObs.GetCapacity());
         this.bennesAvider.addLast(benne);
+
     }
     public void run() {
         int tours = 0;
@@ -45,33 +51,39 @@ public class Ouvrier extends Thread
         System.out.println("fin de l'ouvrier");
         this.interrupt();
     }
-    private  synchronized void Vider (Benne benne)
+    private  void Vider (Benne benne)
     {
-        if(!benne.IsVIde())
-        {
-            benne.Removetronc(25);
-            bennesAvider.addFirst(benne);
-        }
-        else {
-            bennesATransporter.addLast(benne);
-            if (monObs.GetStatus(1) == false) {
-                monObs.essaiEchange(1);
+        lockVider.lock();
+        try {
+            if (!benne.IsVIde()) {
+                benne.Removetronc(25);
+                bennesAvider.addFirst(benne);
+            } else {
+                bennesATransporter.addLast(benne);
+                if (monObs.GetStatus(1) == false) {
+                    monObs.essaiEchange(1);
+                }
             }
         }
-    }
-    private  synchronized  void ViderBenne()
-    {
-        if(bennesAvider.size()!=0) {
-            Benne ben = (Benne) bennesAvider.getFirst();
-            bennesAvider.removeFirst();
-            System.out.println("l 'ouvrier vide la benne");
-            Vider(ben);
+        finally {
+            lockVider.unlock();
         }
-        else
-        {
-            monObs.ModifStatus(false,2);
-            monObs.essaiEchange(1);
+    }
+    private   void ViderBenne() {
+        lockAvider.lock();
+        try {
+            if (bennesAvider.size() != 0) {
+                Benne ben = (Benne) bennesAvider.getFirst();
+                bennesAvider.removeFirst();
+                System.out.println("l 'ouvrier vide la benne");
+                Vider(ben);
+            } else {
+                monObs.ModifStatus(false, 2);
+                monObs.essaiEchange(1);
 
+            }
+        } finally {
+            lockAvider.unlock();
         }
     }
 }
