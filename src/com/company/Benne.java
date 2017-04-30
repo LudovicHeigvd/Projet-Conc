@@ -1,5 +1,8 @@
 package com.company;
 
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
 /**
  * Created by ludovic on 31/03/2017.
  */
@@ -7,6 +10,10 @@ public  class  Benne
 {
     private int max =250;
     private int capacity;
+    private Lock lockbennePlein = new ReentrantLock();
+    private Lock lockbenneVide = new ReentrantLock();
+    private Lock lockaddTronc = new ReentrantLock();
+    private Lock lockRemoveTronc = new ReentrantLock();
     public Benne(int capacity)
     {
        this.capacity =capacity;
@@ -15,22 +22,47 @@ public  class  Benne
     {
         return max;
     }
-    public synchronized boolean Ispleine()
+    public  boolean Ispleine()
     {
-        return this.capacity == max;
+        lockbennePlein.lock();
+        try
+        {
+            return this.capacity == max;
+        }
+        finally {
+            lockbennePlein.unlock();
+        }
+
     }
-    public synchronized boolean IsVIde()
+    public  boolean IsVIde()
     {
-        return this.capacity == 0;
+        lockbenneVide.lock();
+        try {
+            return this.capacity == 0;
+        }
+        finally {
+            lockbenneVide.unlock();
+        }
     }
-    public synchronized  void SetCapacity(int kilos) { capacity =kilos;}
-    public synchronized  void Addtronc(int kilos)
+    public   void Addtronc(int kilos)
     {
-        capacity+=kilos;
+        lockaddTronc.lock();
+        try {
+            capacity += kilos;
+        }
+        finally {
+            lockaddTronc.unlock();
+        }
     }
-    public synchronized  void Removetronc(int kilos)
+    public  void Removetronc(int kilos)
     {
-        capacity=-kilos;
+        lockRemoveTronc.lock();
+        try {
+            capacity = -kilos;
+        }
+        finally {
+            lockRemoveTronc.unlock();
+        }
     }
 
 }
