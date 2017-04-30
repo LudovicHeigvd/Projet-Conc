@@ -23,9 +23,14 @@ public  class  Benne
     {
         return this.capacity == 0;
     }
-    public synchronized  void SetCapacity(int kilos)
+    public synchronized  void SetCapacity(int kilos) { capacity =kilos;}
+    public synchronized  void Addtronc(int kilos)
     {
-        capacity =kilos;
+        capacity+=kilos;
+    }
+    public synchronized  void Removetronc(int kilos)
+    {
+        capacity=-kilos;
     }
 
 }

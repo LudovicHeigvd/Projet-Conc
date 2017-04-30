@@ -47,15 +47,16 @@ public class Ouvrier extends Thread
     }
     private  synchronized void Vider (Benne benne)
     {
-        int i=benne.GetMax();
-        while(!benne.IsVIde())
+        if(!benne.IsVIde())
         {
-            benne.SetCapacity(i);
-            i--;
+            benne.Removetronc(25);
+            bennesAvider.addFirst(benne);
         }
-        bennesATransporter.addLast(benne);
-        if(monObs.GetStatus(1)==false) {
-            monObs.essaiEchange(1);
+        else {
+            bennesATransporter.addLast(benne);
+            if (monObs.GetStatus(1) == false) {
+                monObs.essaiEchange(1);
+            }
         }
     }
     private  synchronized  void ViderBenne()

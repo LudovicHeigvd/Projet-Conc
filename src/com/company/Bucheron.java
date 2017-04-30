@@ -12,6 +12,7 @@ public class Bucheron extends Thread
     private LinkedList<Benne> bennesARemplir;
     private LinkedList<Benne> bennesATransporter;
     private Observateur monObs;
+
     public Bucheron(LinkedList<Benne> bennesForetRemplir,LinkedList<Benne> bennesUsineTranspot,Observateur obs) {
         this.bennesARemplir =bennesForetRemplir;
         this.bennesATransporter =bennesUsineTranspot;
@@ -28,7 +29,7 @@ public class Bucheron extends Thread
                     monObs.ModifStatus(true,0);
                     System.out.println("le bucheron coupe du bois");
                     Thread.sleep((long) Math.ceil(Math.random() * 100));//couper du bois
-                    System.out.println("le bucheron amène tout le bois vers la benne");
+                    System.out.println("le bucheron amène le bois vers la benne");
                     Thread.sleep((long) Math.ceil(Math.random() * 100));//aème le bois vers la beine
                     System.out.println("le bucheron remplis la benne");
                     if(monObs.travail)
@@ -51,16 +52,16 @@ public class Bucheron extends Thread
     }
     private  synchronized void Remplir(Benne benne)
     {
-        int i=1;
-        while(!benne.Ispleine())
+        if(!benne.Ispleine())
         {
-            benne.SetCapacity(i);
-            i++;
+            benne.Addtronc(25);
+            bennesARemplir.addFirst(benne);
         }
-        bennesATransporter.addLast(benne);
-        if(monObs.GetStatus(1)== false)
-        {
-            monObs.essaiEchange(1);
+        else {
+            bennesATransporter.addLast(benne);
+            if (monObs.GetStatus(1) == false) {
+                monObs.essaiEchange(1);
+            }
         }
     }
     private synchronized void Prendrebenne()
