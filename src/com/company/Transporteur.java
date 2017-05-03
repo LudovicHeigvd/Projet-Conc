@@ -62,11 +62,11 @@ public class Transporteur extends Thread
         Benne  benne=null;
         while (bennesUsineTranspot.size()==0) {
             monObs.ModifStatus(false, 1);
-            monObs.essaiEchange(0);
             if(!monObs.travail)
             {
                 return benne;
             }
+            monObs.essaiEchange(0);
         }
          benne = bennesUsineTranspot.getFirst();
         bennesUsineTranspot.removeFirst();
@@ -90,11 +90,11 @@ public class Transporteur extends Thread
         Benne benne = null;
         while(bennesForetTransport.size()==0) {
             monObs.ModifStatus(false,1);
-            monObs.essaiEchange(2);
             if(!monObs.travail)
             {
                 return benne;
             }
+            monObs.essaiEchange(2);
         }
         benne = bennesForetTransport.getFirst();
         bennesForetTransport.removeFirst();
