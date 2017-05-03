@@ -36,7 +36,7 @@ public class Ouvrier extends Thread
                     if(monObs.travail)
                     {
                     ViderBenne();}
-                    Thread.sleep((long) Math.ceil(Math.random() * 100));
+                 //   Thread.sleep((long) Math.ceil(Math.random() * 100));
                 } catch (InterruptedException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
