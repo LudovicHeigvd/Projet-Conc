@@ -43,6 +43,7 @@ public class Ouvrier extends Thread
         }
         monObs.travail =false;
         System.out.println("fin de l'ouvrier");
+        System.out.println("l'ouvrier a fait nb "+tours);
         if (monObs.GetStatus(1) == false) {
             monObs.essaiEchange(1);
         }

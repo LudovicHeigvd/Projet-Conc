@@ -12,6 +12,7 @@ public class Transporteur extends Thread
     LinkedList<Benne> bennesUsineVider;
     LinkedList<Benne> bennesUsineTranspot;
     Observateur monObs;
+    int tour=0;
     public Transporteur(Observateur obs,
                         LinkedList<Benne> bennesForetRemplir,
                         LinkedList<Benne> bennesForetTransport,
@@ -44,13 +45,14 @@ public class Transporteur extends Thread
                 if(monObs.travail) {
                     TransportToBucheron(benne);
                 }
-
+            tour++;
             } catch (InterruptedException e) {
                 System.out.println(e.toString());
             }
 
         }
         System.out.println("fin du transporteur");
+        System.out.println("le transporteur a fait nb "+tour);
         this.interrupt();
 
     }
