@@ -13,10 +13,12 @@ public class Transporteur extends Thread
     LinkedList<Benne> bennesForetTransport;
     LinkedList<Benne> bennesUsineVider;
     LinkedList<Benne> bennesUsineTranspot;
+
     private Lock lockAmmarrerBucheron = new ReentrantLock();
     private Lock lockTransporttoOuvrier = new ReentrantLock();
     private Lock lockAmmarrerOuvrier = new ReentrantLock();
     private Lock lockTransporttoBucheron = new ReentrantLock();
+    
     Observateur monObs;
     public Transporteur(Observateur obs,
                         LinkedList<Benne> bennesForetRemplir,
@@ -63,11 +65,16 @@ public class Transporteur extends Thread
         try {
             System.out.println(" le transporteur amène la benne en forêt");
             Thread.sleep((long) Math.ceil(Math.random() * 100));
+            Benne benne =null;
             while (bennesUsineTranspot.size() == 0) {
                 monObs.ModifStatus(false, 1);
                 monObs.essaiEchange(0);
+                if(!monObs.travail)
+                {
+                    return benne;
+                }
             }
-            Benne benne = bennesUsineTranspot.getFirst();
+             benne = bennesUsineTranspot.getFirst();
             bennesUsineTranspot.removeFirst();
             monObs.ModifStatus(true, 1);
             return benne;
@@ -97,11 +104,16 @@ public class Transporteur extends Thread
         try {
             Thread.sleep((long) Math.ceil(Math.random() * 100));
             System.out.println(" le transporteur prends la benne vide dans l'usine");
+            Benne benne =null;
             while (bennesForetTransport.size() == 0) {
                 monObs.ModifStatus(false, 1);
                 monObs.essaiEchange(2);
+                if(!monObs.travail)
+                {
+                    return benne;
+                }
             }
-            Benne benne = bennesForetTransport.getFirst();
+             benne = bennesForetTransport.getFirst();
             bennesForetTransport.removeFirst();
             monObs.ModifStatus(true, 1);
             return benne;

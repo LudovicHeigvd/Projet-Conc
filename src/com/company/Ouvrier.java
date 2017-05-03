@@ -48,6 +48,9 @@ public class Ouvrier extends Thread
             tours ++;
         }
         monObs.travail =false;
+        if (monObs.GetStatus(1) == false) {
+            monObs.essaiEchange(1);
+        }
         System.out.println("fin de l'ouvrier");
         this.interrupt();
     }
@@ -80,7 +83,6 @@ public class Ouvrier extends Thread
             } else {
                 monObs.ModifStatus(false, 2);
                 monObs.essaiEchange(1);
-
             }
         } finally {
             lockAvider.unlock();
