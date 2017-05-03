@@ -64,14 +64,13 @@ public class Bucheron extends Thread
         lockRemplir.lock();
         try {
             if (!benne.Ispleine()) {
-                benne.Addtronc(250);
+                benne.Addtronc(25);
                 bennesARemplir.addFirst(benne);
             } else {
                 bennesATransporter.addLast(benne);
-                System.out.println("la benne bucheron remplis");
-                if (monObs.GetStatus(1) == false) {
-                    monObs.essaiEchange(1);
-                }
+                System.out.println("la benne est remplie");
+                 monObs.essaiEchange(1);
+
             }
         }
         finally {

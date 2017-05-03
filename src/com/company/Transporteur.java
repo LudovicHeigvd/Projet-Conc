@@ -50,11 +50,11 @@ public class Transporteur extends Thread
                 if(monObs.travail) {
                     TransportToBucheron(benne);
                 }
-                tours ++;
+
             } catch (InterruptedException e) {
                 System.out.println(e.toString());
             }
-
+            tours ++;
         }
         System.out.println("fin du transporteur");
         System.out.println("le transporteur a fait "+tours+" nb tour");
@@ -127,8 +127,6 @@ public class Transporteur extends Thread
     private void TransportToBucheron(Benne benne) throws InterruptedException{
         lockTransporttoBucheron.lock();
         try {
-
-
             Thread.sleep((long) Math.ceil(Math.random() * 100));
             System.out.println(" le transporteur amène la benne vide chez le bucheron");
             bennesForetRemplir.addLast(benne);

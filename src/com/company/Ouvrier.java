@@ -36,6 +36,7 @@ public class Ouvrier extends Thread
                     if(monObs.travail)
                     {
                     ViderBenne();}
+                    Thread.sleep((long) Math.ceil(Math.random() * 100));
                 } catch (InterruptedException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
@@ -60,9 +61,10 @@ public class Ouvrier extends Thread
         lockVider.lock();
         try {
             if (!benne.IsVIde()) {
-                benne.Removetronc(250);
+                benne.Removetronc(25);
                 bennesAvider.addFirst(benne);
             } else {
+                System.out.println("la benne est vide");
                 bennesATransporter.addLast(benne);
                 if (monObs.GetStatus(1) == false) {
                     monObs.essaiEchange(1);
@@ -75,11 +77,11 @@ public class Ouvrier extends Thread
     }
     private   void ViderBenne() {
         lockAvider.lock();
+        System.out.println("l 'ouvrier vide la benne");
         try {
             if (bennesAvider.size() != 0) {
                 Benne ben = (Benne) bennesAvider.getFirst();
                 bennesAvider.removeFirst();
-                System.out.println("l 'ouvrier vide la benne");
                 Vider(ben);
             } else {
                 monObs.ModifStatus(false, 2);

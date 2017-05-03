@@ -48,7 +48,7 @@ public  class  Benne
     {
         lockaddTronc.lock();
         try {
-            capacity += kilos;
+            capacity = capacity+ kilos;
         }
         finally {
             lockaddTronc.unlock();
@@ -58,7 +58,7 @@ public  class  Benne
     {
         lockRemoveTronc.lock();
         try {
-            capacity = -kilos;
+            capacity = capacity-kilos;
         }
         finally {
             lockRemoveTronc.unlock();
