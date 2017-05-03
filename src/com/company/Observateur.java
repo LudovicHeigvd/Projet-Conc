@@ -36,7 +36,7 @@ public class Observateur {
         try {
             if (this.GetStatus(j) == false) {
                 bloque = false;
-                conditionEssaie.signal();
+                conditionEssaie.signalAll();
                 System.out.println("l'échange peut avoir lieu");
             } else {
                 bloque = true;
