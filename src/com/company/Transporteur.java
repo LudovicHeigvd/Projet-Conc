@@ -18,7 +18,7 @@ public class Transporteur extends Thread
     private Lock lockTransporttoOuvrier = new ReentrantLock();
     private Lock lockAmmarrerOuvrier = new ReentrantLock();
     private Lock lockTransporttoBucheron = new ReentrantLock();
-    
+
     Observateur monObs;
     public Transporteur(Observateur obs,
                         LinkedList<Benne> bennesForetRemplir,

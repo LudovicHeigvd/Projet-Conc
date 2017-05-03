@@ -1,5 +1,9 @@
 package com.company;
 
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
 /**
  * Created by ludovic on 01/04/2017.
  */
@@ -9,6 +13,8 @@ public class Observateur {
     private int capacity=255;
     private  boolean  status[]={true,true,true}; // true = travail false = block 0= bu 1= trans 2 = ouvr
     private boolean bloque;
+    private Lock lockEssaieEchange = new ReentrantLock();
+    private Condition conditionEssaie = lockEssaieEchange.newCondition();
     public synchronized  boolean GetStatus(int i){
         return status[i];
     }
@@ -17,7 +23,7 @@ public class Observateur {
 
         status[i]=value;
     }
-    public synchronized int GetCapacity()
+    public  int GetCapacity()
     {
       return capacity;
     }
@@ -25,35 +31,43 @@ public class Observateur {
 		modifStatus(i);
 		modifStatus(j);
 	}*/
-    public synchronized void essaiEchange(int j){
-        if (this.GetStatus(j)==false){
-            bloque=false;
-            notifyAll();
-            System.out.println("l'échange peut avoir lieu");
-        } else {
-            bloque=true;
-                while (bloque){
-                String nom;
-                switch (j) {
-                    case 0:
-                        nom ="Bucheron";
-                        break;
-                    case 1:
-                        nom="Transporteur" ; break;
-                    case 2:
-                        nom = "Ouvrier"; break;
-                    default:
-                        nom ="alien";
-                }
-                System.out.println("on attends le tread "+nom+ " pour débloquer la situation ");
-                try {
-                    wait();
-                } catch (InterruptedException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
+    public  void essaiEchange(int j){
+        lockEssaieEchange.lock();
+        try {
+            if (this.GetStatus(j) == false) {
+                bloque = false;
+                conditionEssaie.signal();
+                System.out.println("l'échange peut avoir lieu");
+            } else {
+                bloque = true;
+                while (bloque) {
+                    String nom;
+                    switch (j) {
+                        case 0:
+                            nom = "Bucheron";
+                            break;
+                        case 1:
+                            nom = "Transporteur";
+                            break;
+                        case 2:
+                            nom = "Ouvrier";
+                            break;
+                        default:
+                            nom = "alien";
+                    }
+                    System.out.println("on attends le tread " + nom + " pour débloquer la situation ");
+                    try {
+                        conditionEssaie.await();
+                    } catch (InterruptedException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
                 }
             }
+            this.ModifStatus(true, j);
         }
-        this.ModifStatus(true,j);
+        finally {
+            lockEssaieEchange.unlock();
+        }
     }
 }
