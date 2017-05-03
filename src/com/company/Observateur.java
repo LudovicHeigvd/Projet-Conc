@@ -10,7 +10,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class Observateur {
     public static boolean travail=true;
-    private int capacity=255;
+    private int capacity=250;
     private  boolean  status[]={true,true,true}; // true = travail false = block 0= bu 1= trans 2 = ouvr
     private boolean bloque;
     private Lock lockEssaieEchange = new ReentrantLock();

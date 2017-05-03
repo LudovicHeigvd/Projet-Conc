@@ -60,7 +60,7 @@ public class Ouvrier extends Thread
         lockVider.lock();
         try {
             if (!benne.IsVIde()) {
-                benne.Removetronc(25);
+                benne.Removetronc(250);
                 bennesAvider.addFirst(benne);
             } else {
                 bennesATransporter.addLast(benne);
