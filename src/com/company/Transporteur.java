@@ -18,7 +18,7 @@ public class Transporteur extends Thread
     private Lock lockTransporttoOuvrier = new ReentrantLock();
     private Lock lockAmmarrerOuvrier = new ReentrantLock();
     private Lock lockTransporttoBucheron = new ReentrantLock();
-
+    int tours =0;
     Observateur monObs;
     public Transporteur(Observateur obs,
                         LinkedList<Benne> bennesForetRemplir,
@@ -50,13 +50,14 @@ public class Transporteur extends Thread
                 if(monObs.travail) {
                     TransportToBucheron(benne);
                 }
-
+                tours ++;
             } catch (InterruptedException e) {
                 System.out.println(e.toString());
             }
 
         }
         System.out.println("fin du transporteur");
+        System.out.println("le transporteur a fait "+tours+" nb tour");
         this.interrupt();
 
     }

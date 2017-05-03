@@ -52,6 +52,7 @@ public class Ouvrier extends Thread
             monObs.essaiEchange(1);
         }
         System.out.println("fin de l'ouvrier");
+        System.out.println("l'ouvrier a fait "+tours+" nb tour");
         this.interrupt();
     }
     private  void Vider (Benne benne)

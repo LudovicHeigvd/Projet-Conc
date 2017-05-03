@@ -56,6 +56,7 @@ public class Bucheron extends Thread
             monObs.essaiEchange(1);
         }
         System.out.println("fin du bucheron");
+        System.out.println("le bucheron a fait "+tours+" nb tour");
         this.interrupt();
     }
     private void Remplir(Benne benne)
