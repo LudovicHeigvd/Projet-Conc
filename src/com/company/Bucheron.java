@@ -47,6 +47,9 @@ public class Bucheron extends Thread
            tours ++;
         }
         monObs.travail =false;
+        if (monObs.GetStatus(1) == false) {
+            monObs.essaiEchange(1);
+        }
         System.out.println("fin du bucheron");
         this.interrupt();
     }

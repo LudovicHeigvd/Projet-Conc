@@ -43,6 +43,9 @@ public class Ouvrier extends Thread
         }
         monObs.travail =false;
         System.out.println("fin de l'ouvrier");
+        if (monObs.GetStatus(1) == false) {
+            monObs.essaiEchange(1);
+        }
         this.interrupt();
     }
     private  synchronized void Vider (Benne benne)
