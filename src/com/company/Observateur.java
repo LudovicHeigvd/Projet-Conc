@@ -14,14 +14,27 @@ public class Observateur {
     private  boolean  status[]={true,true,true}; // true = travail false = block 0= bu 1= trans 2 = ouvr
     private boolean bloque;
     private Lock lockEssaieEchange = new ReentrantLock();
+    private Lock lockgetstatuts = new ReentrantLock();
+    private Lock locksetstatuts = new ReentrantLock();
     private Condition conditionEssaie = lockEssaieEchange.newCondition();
-    public synchronized  boolean GetStatus(int i){
-        return status[i];
+    public  boolean GetStatus(int i){
+        lockgetstatuts.lock();
+        try {
+            return status[i];
+        }
+        finally {
+            lockgetstatuts.unlock();
+        }
     }
 
-   public synchronized  void  ModifStatus(boolean value, int i){
-
-        status[i]=value;
+   public  void  ModifStatus(boolean value, int i){
+       locksetstatuts.lock();
+       try {
+           status[i] = value;
+       }
+       finally {
+           locksetstatuts.unlock();
+       }
     }
     public  int GetCapacity()
     {
