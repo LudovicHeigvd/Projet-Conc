@@ -31,6 +31,7 @@ public class Ouvrier extends Thread
                     {
                     ViderBenne();}
                     Thread.sleep((long) Math.ceil(Math.random() * 100));
+                    System.out.println("l'ouvrier met le bois dans la chaine de montage");
                 } catch (InterruptedException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
