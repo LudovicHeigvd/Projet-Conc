@@ -1,7 +1,10 @@
 package com.company;
 
 import com.sun.org.apache.xpath.internal.functions.FuncFalse;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 
+import java.text.Collator;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -17,13 +20,14 @@ public class Bucheron extends Thread
     private Lock lockRemplir = new ReentrantLock();
     private Lock lockPrendreBenne = new ReentrantLock();
     private Observateur monObs;
-
-    public Bucheron(LinkedList<Benne> bennesForetRemplir,LinkedList<Benne> bennesUsineTranspot,Observateur obs) {
+    private int id;
+    public Bucheron(int id,LinkedList<Benne> bennesForetRemplir,LinkedList<Benne> bennesUsineTranspot,Observateur obs) {
         this.bennesARemplir =bennesForetRemplir;
         this.bennesATransporter =bennesUsineTranspot;
         this.monObs=obs;
         Benne benne = new Benne(0);
         this.bennesARemplir.addLast(benne);
+        this.id =id;
     }
     public void run() {
         int tours = 0;
@@ -31,12 +35,12 @@ public class Bucheron extends Thread
         {
             if(monObs.travail) {
                 try{
-                    monObs.ModifStatus(true,0);
-                    System.out.println("le bucheron coupe du bois");
+                   // monObs.ModifStatus(true,0);
+                    System.out.println("le bucheron "+id+" coupe du bois");
                     Thread.sleep((long) Math.ceil(Math.random() * 100));//couper du bois
-                    System.out.println("le bucheron amène le bois vers la benne");
+                    System.out.println("le bucheron" +id+" amène le bois vers la benne");
                     Thread.sleep((long) Math.ceil(Math.random() * 100));//aème le bois vers la beine
-                    System.out.println("le bucheron remplis la benne");
+                    System.out.println("le bucheron"+id+" remplis la benne");
                     if(monObs.travail)
                     {
                     Prendrebenne();}
@@ -52,11 +56,14 @@ public class Bucheron extends Thread
            tours ++;
         }
         monObs.travail =false;
-        if (monObs.GetStatus(1) == false) {
-            monObs.essaiEchange(1);
+        if (monObs.trans.size()!= 0) {
+            monObs.LastEchange(1);
         }
-        System.out.println("fin du bucheron");
-        System.out.println("le bucheron a fait "+tours+" nb tour");
+        if (monObs.bobs.size()!= 0) {
+            monObs.LastEchange(0);
+        }
+        System.out.println("fin du bucheron"+id);
+        System.out.println("le bucheron"+id+" a fait "+tours+" nb tour");
         this.interrupt();
     }
     private void Remplir(Benne benne)
@@ -66,15 +73,19 @@ public class Bucheron extends Thread
             if (!benne.Ispleine()) {
                 benne.Addtronc(25);
                 bennesARemplir.addFirst(benne);
+                monObs.Tribucheron(bennesARemplir);
+
             } else {
                 bennesATransporter.addLast(benne);
-                System.out.println("la benne est remplie");
-                 monObs.essaiEchange(1);
+                System.out.println("la benne est remplie par le bucheron"+id);
+                 monObs.essaiEchange(1,id);
 
             }
         }
         finally {
+          //  TriBenne(bennesARemplir);
             lockRemplir.unlock();
+
         }
     }
     private  void Prendrebenne()
@@ -86,13 +97,34 @@ public class Bucheron extends Thread
                 bennesARemplir.removeFirst();
                 Remplir(ben);
             } else {
-                monObs.ModifStatus(false, 0);
-                monObs.essaiEchange(1);
+              //  monObs.ModifStatus(false, 0);
+                monObs.essaiEchange(1,id);
 
             }
         }
         finally {
             lockPrendreBenne.unlock();
+        }
+    }
+    public void TriBenne(LinkedList<Benne> bennesatrier)
+    {
+        Boolean ordrer=false;
+        int size =bennesatrier.size();
+        while (!ordrer)
+        {
+            for(int i=0;i<size-1;i++)
+            {
+                if(bennesatrier.get(i).GetCapcity()<bennesatrier.get(i+1).GetCapcity())
+                {
+                    Benne temp =bennesatrier.get(i);
+                    bennesatrier.add(i,bennesatrier.get(i+1));
+                    bennesatrier.add(i+1,temp);
+                }
+                else
+                {
+                    ordrer=true;
+                }
+            }
         }
     }
 }

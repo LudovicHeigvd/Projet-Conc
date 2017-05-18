@@ -14,6 +14,7 @@ public  class  Benne
     private Lock lockbenneVide = new ReentrantLock();
     private Lock lockaddTronc = new ReentrantLock();
     private Lock lockRemoveTronc = new ReentrantLock();
+    private Lock lockGetcapacity = new ReentrantLock();
     public Benne(int capacity)
     {
        this.capacity =capacity;
@@ -21,6 +22,18 @@ public  class  Benne
     public int GetMax()
     {
         return max;
+    }
+
+    public int GetCapcity()
+    {
+        lockGetcapacity.lock();
+        try
+        {
+            return capacity;
+        }
+    finally {
+            lockGetcapacity.unlock();
+        }
     }
     public  boolean Ispleine()
     {

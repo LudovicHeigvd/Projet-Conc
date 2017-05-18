@@ -18,9 +18,10 @@ public class Transporteur extends Thread
     private Lock lockTransporttoOuvrier = new ReentrantLock();
     private Lock lockAmmarrerOuvrier = new ReentrantLock();
     private Lock lockTransporttoBucheron = new ReentrantLock();
+    private int id;
     int tours =0;
     Observateur monObs;
-    public Transporteur(Observateur obs,
+    public Transporteur(int id,Observateur obs,
                         LinkedList<Benne> bennesForetRemplir,
                         LinkedList<Benne> bennesForetTransport,
                         LinkedList<Benne> bennesUsineVider,
@@ -32,6 +33,7 @@ public class Transporteur extends Thread
         this.bennesUsineVider = bennesUsineVider;
         this.bennesUsineTranspot = bennesUsineTranspot;
         this.monObs=obs;
+        this.id=id;
         Benne benne = new Benne(monObs.GetCapacity());
         bennesUsineTranspot.addLast(benne);
     }
@@ -39,7 +41,7 @@ public class Transporteur extends Thread
         while (monObs.travail){
             try {
                 Benne benne = null;
-                monObs.ModifStatus(true,1);
+                //monObs.ModifStatus(true,1);
                 benne=AmmarerBuecheron();
                 if(monObs.travail) {
                     TransportToOuvrier(benne);
@@ -56,28 +58,34 @@ public class Transporteur extends Thread
             }
             tours ++;
         }
-        System.out.println("fin du transporteur");
-        System.out.println("le transporteur a fait "+tours+" nb tour");
+        System.out.println("fin du transporteur"+id);
+        System.out.println("le transporteur"+id+" a fait "+tours+" nb tour");
+        if(monObs.bobs.size()!=0) {
+            monObs.LastEchange(0);
+        }
+        if(monObs.ouvs.size()!=0) {
+            monObs.LastEchange(2);
+        }
         this.interrupt();
 
     }
     private Benne AmmarerBuecheron()throws InterruptedException  {
         lockAmmarrerBucheron.lock();
         try {
-            System.out.println(" le transporteur amène la benne en forêt");
+            System.out.println(" le transporteur"+id+" amène la benne en forêt");
             Thread.sleep((long) Math.ceil(Math.random() * 100));
             Benne benne =null;
             while (bennesUsineTranspot.size() == 0) {
-                monObs.ModifStatus(false, 1);
+               // monObs.ModifStatus(false, 1);
                 if(!monObs.travail)
                 {
                     return benne;
                 }
-                monObs.essaiEchange(0);
+                monObs.essaiEchange(0,id);
             }
              benne = bennesUsineTranspot.getFirst();
             bennesUsineTranspot.removeFirst();
-            monObs.ModifStatus(true, 1);
+          //  monObs.ModifStatus(true, 1);
             return benne;
         }
         finally {
@@ -88,11 +96,11 @@ public class Transporteur extends Thread
     private  void TransportToOuvrier(Benne benne)throws InterruptedException{
         lockTransporttoOuvrier.lock();
         try {
-            System.out.println(" le transporteur donne la benne à l'ouvrier");
+            System.out.println(" le transporteur"+id+" donne la benne à l'ouvrier");
             Thread.sleep((long) Math.ceil(Math.random() * 100));
             bennesUsineVider.addLast(benne);
-            if (monObs.GetStatus(2) == false) {
-                monObs.essaiEchange(2);
+            if (monObs.ouvs.size() != 0) {
+                monObs.essaiEchange(2,id);
             }
         }
         finally {
@@ -104,19 +112,19 @@ public class Transporteur extends Thread
         lockAmmarrerOuvrier.lock();
         try {
             Thread.sleep((long) Math.ceil(Math.random() * 100));
-            System.out.println(" le transporteur prends la benne vide dans l'usine");
+            System.out.println(" le transporteur"+id+" prends la benne vide dans l'usine");
             Benne benne =null;
             while (bennesForetTransport.size() == 0) {
-                monObs.ModifStatus(false, 1);
+              //  monObs.ModifStatus(false, 1);
                 if(!monObs.travail)
                 {
                     return benne;
                 }
-                monObs.essaiEchange(2);
+                monObs.essaiEchange(2,id);
             }
              benne = bennesForetTransport.getFirst();
             bennesForetTransport.removeFirst();
-            monObs.ModifStatus(true, 1);
+            //monObs.ModifStatus(true, 1);
             return benne;
         }
         finally {
@@ -128,10 +136,10 @@ public class Transporteur extends Thread
         lockTransporttoBucheron.lock();
         try {
             Thread.sleep((long) Math.ceil(Math.random() * 100));
-            System.out.println(" le transporteur amène la benne vide chez le bucheron");
+            System.out.println(" le transporteur"+id+" amène la benne vide chez le bucheron");
             bennesForetRemplir.addLast(benne);
-            if (monObs.GetStatus(0) == false) {
-                monObs.essaiEchange(0);
+            if (monObs.bobs.size() !=0 ) {
+                monObs.essaiEchange(0,id);
             }
         }
         finally {
