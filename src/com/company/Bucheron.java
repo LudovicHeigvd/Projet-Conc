@@ -88,8 +88,7 @@ public class Bucheron extends Thread
 
         }
     }
-    private  void Prendrebenne()
-    {
+    private  void Prendrebenne() {
         lockPrendreBenne.lock();
         try {
             if (bennesARemplir.size() != 0) {
@@ -97,34 +96,12 @@ public class Bucheron extends Thread
                 bennesARemplir.removeFirst();
                 Remplir(ben);
             } else {
-              //  monObs.ModifStatus(false, 0);
-                monObs.essaiEchange(1,id);
+                //  monObs.ModifStatus(false, 0);
+                monObs.essaiEchange(1, id);
 
             }
-        }
-        finally {
+        } finally {
             lockPrendreBenne.unlock();
-        }
-    }
-    public void TriBenne(LinkedList<Benne> bennesatrier)
-    {
-        Boolean ordrer=false;
-        int size =bennesatrier.size();
-        while (!ordrer)
-        {
-            for(int i=0;i<size-1;i++)
-            {
-                if(bennesatrier.get(i).GetCapcity()<bennesatrier.get(i+1).GetCapcity())
-                {
-                    Benne temp =bennesatrier.get(i);
-                    bennesatrier.add(i,bennesatrier.get(i+1));
-                    bennesatrier.add(i+1,temp);
-                }
-                else
-                {
-                    ordrer=true;
-                }
-            }
         }
     }
 }

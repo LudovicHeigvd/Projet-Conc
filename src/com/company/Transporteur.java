@@ -83,8 +83,14 @@ public class Transporteur extends Thread
                 }
                 monObs.essaiEchange(0,id);
             }
-             benne = bennesUsineTranspot.getFirst();
-            bennesUsineTranspot.removeFirst();
+            bennesUsine:
+            if(bennesUsineTranspot.size()>0) {
+                benne = bennesUsineTranspot.getFirst();
+                bennesUsineTranspot.removeFirst();
+            }
+            else {
+                break bennesUsine;
+            }
           //  monObs.ModifStatus(true, 1);
             return benne;
         }
@@ -114,16 +120,27 @@ public class Transporteur extends Thread
             Thread.sleep((long) Math.ceil(Math.random() * 100));
             System.out.println(" le transporteur"+id+" prends la benne vide dans l'usine");
             Benne benne =null;
+
             while (bennesForetTransport.size() == 0) {
               //  monObs.ModifStatus(false, 1);
+
                 if(!monObs.travail)
                 {
                     return benne;
                 }
                 monObs.essaiEchange(2,id);
             }
-             benne = bennesForetTransport.getFirst();
-            bennesForetTransport.removeFirst();
+            bennevide:
+            try {
+                if (bennesForetTransport.size() > 0) {
+                    benne = bennesForetTransport.getFirst();
+                    bennesForetTransport.removeFirst();
+                } else {
+                    break bennevide;
+                }
+            }
+            catch (Exception e){}
+
             //monObs.ModifStatus(true, 1);
             return benne;
         }

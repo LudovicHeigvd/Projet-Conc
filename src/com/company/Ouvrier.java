@@ -66,15 +66,17 @@ public class Ouvrier extends Thread
     {
         lockVider.lock();
         try {
-            if (!benne.IsVIde()) {
-                benne.Removetronc(25);
-                bennesAvider.addFirst(benne);
-                monObs.TriOuvrier(bennesAvider);
-            } else {
-                System.out.println("la benne est vide");
-                bennesATransporter.addLast(benne);
-                if (monObs.trans.size() != 0) {
-                    monObs.essaiEchange(1,id);
+            if(benne!=null) {
+                if (!benne.IsVIde()) {
+                    benne.Removetronc(25);
+                    bennesAvider.addFirst(benne);
+                    monObs.TriOuvrier(bennesAvider);
+                } else {
+                    System.out.println("la benne est vide");
+                    bennesATransporter.addLast(benne);
+                    if (monObs.trans.size() != 0) {
+                        monObs.essaiEchange(1, id);
+                    }
                 }
             }
         }
@@ -98,27 +100,6 @@ public class Ouvrier extends Thread
             }
         } finally {
             lockAvider.unlock();
-        }
-    }
-    public void TriBenne(LinkedList<Benne> bennesatrier)
-    {
-        Boolean ordrer=false;
-        int size =bennesatrier.size();
-        while (!ordrer)
-        {
-            for(int i=0;i<size-1;i++)
-            {
-                if(bennesatrier.get(i).GetCapcity()>bennesatrier.get(i+1).GetCapcity())
-                {
-                    Benne temp =bennesatrier.get(i);
-                    bennesatrier.add(i,bennesatrier.get(i+1));
-                    bennesatrier.add(i+1,temp);
-                }
-                else
-                {
-                    ordrer=true;
-                }
-            }
         }
     }
 }

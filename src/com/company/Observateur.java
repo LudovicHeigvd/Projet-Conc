@@ -147,44 +147,55 @@ public class Observateur {
     {
         conditionEssaie.signalAll();
     }
+
     public void Tribucheron(LinkedList<Benne> bennesARemplir)
     {
         lockTrilisteBcheron.lock();
         try {
-            bennesARemplir.sort(new Comparator<Benne>() {
-                @Override
-                public int compare(Benne o1, Benne o2) {
-                    if (o1.GetCapcity() > o2.GetCapcity()) {
-                        return 1;
-                    } else if (o1.GetCapcity() < o2.GetCapcity()) {
-                        return -1;
+            if(bennesARemplir.size()>1) {
+                bennesARemplir.sort(new Comparator<Benne>() {
+                    @Override
+                    public int compare(Benne o1, Benne o2) {
+                        if (o1.GetCapcity() > o2.GetCapcity()) {
+                            return 1;
+                        } else if (o1.GetCapcity() < o2.GetCapcity()) {
+                            return -1;
+                        }
+                        return 0;
                     }
-                    return 0;
-                }
-            });
+                });
+            }
+        }
+        catch (Exception e){
+            e.getMessage();
         }
         finally {
             lockTrilisteBcheron.unlock();
         }
     }
-    public void TriOuvrier(LinkedList<Benne> bennesAvider)
-    {
+    public void TriOuvrier(LinkedList<Benne> bennesAvider) {
         lockTrilisteOuvrier.lock();
         try {
-            bennesAvider.sort(new Comparator<Benne>() {
-                @Override
-                public int compare(Benne o1, Benne o2) {
-                    if (o1.GetCapcity() < o2.GetCapcity()) {
-                        return 1;
-                    } else if (o1.GetCapcity() > o2.GetCapcity()) {
-                        return -1;
+            if (bennesAvider.size() > 1) {
+                bennesAvider.sort(new Comparator<Benne>() {
+                    @Override
+                    public int compare(Benne o1, Benne o2) {
+                        if (o1.GetCapcity() < o2.GetCapcity()) {
+                            return 1;
+                        } else if (o1.GetCapcity() > o2.GetCapcity()) {
+                            return -1;
+                        }
+                        return 0;
                     }
-                    return 0;
-                }
-            });
+                });
+            }
+        }
+        catch (Exception e){
+            e.getMessage();
         }
         finally {
             lockTrilisteOuvrier.unlock();
         }
     }
+
 }
