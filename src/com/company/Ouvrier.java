@@ -17,13 +17,15 @@ public class Ouvrier extends Thread
     private Lock lockVider = new ReentrantLock();
     private Lock lockAvider = new ReentrantLock();
     private int id;
-    public Ouvrier(int id,LinkedList<Benne> bennesUsineVider,LinkedList<Benne> bennesForetTransport,Observateur obs) {
+    private ParkingUsine pu;
+    public Ouvrier(int id,ParkingUsine pu,LinkedList<Benne> bennesUsineVider,LinkedList<Benne> bennesForetTransport,Observateur obs) {
         this.bennesAvider =bennesUsineVider;
         this.bennesATransporter =bennesForetTransport;
         this.monObs=obs;
         this.id=id;
         Benne benne = new Benne(monObs.GetCapacity());
         this.bennesAvider.addLast(benne);
+        this.pu =pu;
 
     }
     public void run() {
@@ -52,42 +54,42 @@ public class Ouvrier extends Thread
             tours ++;
         }
         monObs.travail =false;
-        if (monObs.trans.size() != 0) {
-            monObs.LastEchange(1);
+        if (pu.trans.size() != 0) {
+            pu.LastEchange(1);
         }
         System.out.println("fin de l'ouvrier"+id);
         System.out.println("l'ouvrier"+id+" a fait "+tours+" nb tour");
-        if(monObs.ouvs.size()!=0) {
-            monObs.LastEchange(2);
+        if(pu.ouvs.size()!=0) {
+            pu.LastEchange(2);
         }
         this.interrupt();
     }
     private  void Vider (Benne benne)
     {
-        lockVider.lock();
+        pu.lockTrilisteOuvrier.lock();
         try {
             if(benne!=null) {
                 if (!benne.IsVIde()) {
                     benne.Removetronc(25);
                     bennesAvider.addFirst(benne);
-                    monObs.TriOuvrier(bennesAvider);
+                    pu.TriOuvrier(bennesAvider);
                 } else {
                     System.out.println("la benne est vide");
                     bennesATransporter.addLast(benne);
-                    if (monObs.trans.size() != 0) {
-                        monObs.essaiEchange(1, id);
+                    if (pu.trans.size() != 0) {
+                        pu.essaiEchange(1, id);
                     }
                 }
             }
         }
         finally {
           //  TriBenne(bennesAvider);
-            lockVider.unlock();
+            pu.lockTrilisteOuvrier.unlock();
 
         }
     }
     private   void ViderBenne() {
-        lockAvider.lock();
+        pu.lockTrilisteOuvrier.lock();
         System.out.println("l 'ouvrier"+id+" vide la benne");
         try {
             if (bennesAvider.size() != 0) {
@@ -96,10 +98,10 @@ public class Ouvrier extends Thread
                 Vider(ben);
             } else {
                // monObs.ModifStatus(false, 2);
-                monObs.essaiEchange(1,id);
+                pu.essaiEchange(1,id);
             }
         } finally {
-            lockAvider.unlock();
+            pu.lockTrilisteOuvrier.unlock();
         }
     }
 }

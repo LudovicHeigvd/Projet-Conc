@@ -18,10 +18,12 @@ public class Transporteur extends Thread
     private Lock lockTransporttoOuvrier = new ReentrantLock();
     private Lock lockAmmarrerOuvrier = new ReentrantLock();
     private Lock lockTransporttoBucheron = new ReentrantLock();
+    ParkingForet pf;
+    ParkingUsine pu;
     private int id;
     int tours =0;
     Observateur monObs;
-    public Transporteur(int id,Observateur obs,
+    public Transporteur(int id,Observateur obs,ParkingForet pf,ParkingUsine pu,
                         LinkedList<Benne> bennesForetRemplir,
                         LinkedList<Benne> bennesForetTransport,
                         LinkedList<Benne> bennesUsineVider,
@@ -36,6 +38,8 @@ public class Transporteur extends Thread
         this.id=id;
         Benne benne = new Benne(monObs.GetCapacity());
         bennesUsineTranspot.addLast(benne);
+        this.pf=pf;
+        this.pu=pu;
     }
     public void run(){
         while (monObs.travail){
@@ -60,11 +64,11 @@ public class Transporteur extends Thread
         }
         System.out.println("fin du transporteur"+id);
         System.out.println("le transporteur"+id+" a fait "+tours+" nb tour");
-        if(monObs.bobs.size()!=0) {
-            monObs.LastEchange(0);
+        if(pf.bobs.size()!=0) {
+            pf.LastEchange(0);
         }
-        if(monObs.ouvs.size()!=0) {
-            monObs.LastEchange(2);
+        if(pu.ouvs.size()!=0) {
+            pu.LastEchange(2);
         }
         this.interrupt();
 
@@ -81,7 +85,7 @@ public class Transporteur extends Thread
                 {
                     return benne;
                 }
-                monObs.essaiEchange(0,id);
+                pf.essaiEchange(0,id);
             }
             bennesUsine:
             if(bennesUsineTranspot.size()>0) {
@@ -100,17 +104,17 @@ public class Transporteur extends Thread
     }
 
     private  void TransportToOuvrier(Benne benne)throws InterruptedException{
-        lockTransporttoOuvrier.lock();
+        pu.lockTrilisteOuvrier.lock();
         try {
             System.out.println(" le transporteur"+id+" donne la benne à l'ouvrier");
             Thread.sleep((long) Math.ceil(Math.random() * 100));
             bennesUsineVider.addLast(benne);
-            if (monObs.ouvs.size() != 0) {
-                monObs.essaiEchange(2,id);
+            if (pu.ouvs.size() != 0) {
+                pu.essaiEchange(2,id);
             }
         }
         finally {
-            lockTransporttoOuvrier.unlock();
+            pu.lockTrilisteOuvrier.unlock();
         }
     }
 
@@ -128,7 +132,7 @@ public class Transporteur extends Thread
                 {
                     return benne;
                 }
-                monObs.essaiEchange(2,id);
+                pu.essaiEchange(2,id);
             }
             bennevide:
             try {
@@ -150,17 +154,17 @@ public class Transporteur extends Thread
     }
 
     private void TransportToBucheron(Benne benne) throws InterruptedException{
-        lockTransporttoBucheron.lock();
+        pf.lockTrilisteBcheron.lock();
         try {
             Thread.sleep((long) Math.ceil(Math.random() * 100));
             System.out.println(" le transporteur"+id+" amène la benne vide chez le bucheron");
             bennesForetRemplir.addLast(benne);
-            if (monObs.bobs.size() !=0 ) {
-                monObs.essaiEchange(0,id);
+            if (pf.bobs.size() !=0 ) {
+                pf.essaiEchange(0,id);
             }
         }
         finally {
-            lockTransporttoBucheron.unlock();
+            pf.lockTrilisteBcheron.unlock();
         }
      }
 }

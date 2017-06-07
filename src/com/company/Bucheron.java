@@ -21,13 +21,15 @@ public class Bucheron extends Thread
     private Lock lockPrendreBenne = new ReentrantLock();
     private Observateur monObs;
     private int id;
-    public Bucheron(int id,LinkedList<Benne> bennesForetRemplir,LinkedList<Benne> bennesUsineTranspot,Observateur obs) {
+    ParkingForet pf;
+    public Bucheron(int id, ParkingForet pf,LinkedList<Benne> bennesForetRemplir,LinkedList<Benne> bennesUsineTranspot,Observateur obs) {
         this.bennesARemplir =bennesForetRemplir;
         this.bennesATransporter =bennesUsineTranspot;
         this.monObs=obs;
         Benne benne = new Benne(0);
         this.bennesARemplir.addLast(benne);
         this.id =id;
+        this.pf=pf;
     }
     public void run() {
         int tours = 0;
@@ -56,11 +58,11 @@ public class Bucheron extends Thread
            tours ++;
         }
         monObs.travail =false;
-        if (monObs.trans.size()!= 0) {
-            monObs.LastEchange(1);
+        if (pf.trans.size()!= 0) {
+            pf.LastEchange(1);
         }
-        if (monObs.bobs.size()!= 0) {
-            monObs.LastEchange(0);
+        if (pf.bobs.size()!= 0) {
+            pf.LastEchange(0);
         }
         System.out.println("fin du bucheron"+id);
         System.out.println("le bucheron"+id+" a fait "+tours+" nb tour");
@@ -68,23 +70,23 @@ public class Bucheron extends Thread
     }
     private void Remplir(Benne benne)
     {
-        lockRemplir.lock();
+        pf.lockTrilisteBcheron.lock();
         try {
             if (!benne.Ispleine()) {
                 benne.Addtronc(25);
                 bennesARemplir.addFirst(benne);
-                monObs.Tribucheron(bennesARemplir);
+                pf.Tribucheron(bennesARemplir);
 
             } else {
                 bennesATransporter.addLast(benne);
                 System.out.println("la benne est remplie par le bucheron"+id);
-                 monObs.essaiEchange(1,id);
+                 pf.essaiEchange(1,id);
 
             }
         }
         finally {
           //  TriBenne(bennesARemplir);
-            lockRemplir.unlock();
+            pf.lockTrilisteBcheron.unlock();
 
         }
     }
@@ -97,7 +99,7 @@ public class Bucheron extends Thread
                 Remplir(ben);
             } else {
                 //  monObs.ModifStatus(false, 0);
-                monObs.essaiEchange(1, id);
+                pf.essaiEchange(1, id);
 
             }
         } finally {
