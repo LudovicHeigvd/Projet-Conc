@@ -13,11 +13,13 @@ public class Transporteur extends Thread
     LinkedList<Benne> bennesForetTransport;
     LinkedList<Benne> bennesUsineVider;
     LinkedList<Benne> bennesUsineTranspot;
+    LinkedList<Integer> petriActrions;
 
     private Lock lockAmmarrerBucheron = new ReentrantLock();
     private Lock lockTransporttoOuvrier = new ReentrantLock();
     private Lock lockAmmarrerOuvrier = new ReentrantLock();
     private Lock lockTransporttoBucheron = new ReentrantLock();
+
     ParkingForet pf;
     ParkingUsine pu;
     private int id;
@@ -27,7 +29,8 @@ public class Transporteur extends Thread
                         LinkedList<Benne> bennesForetRemplir,
                         LinkedList<Benne> bennesForetTransport,
                         LinkedList<Benne> bennesUsineVider,
-                        LinkedList<Benne> bennesUsineTranspot
+                        LinkedList<Benne> bennesUsineTranspot,
+                        LinkedList<Integer> petriActrions
     )
     {
         this.bennesForetRemplir = bennesForetRemplir;
@@ -40,6 +43,8 @@ public class Transporteur extends Thread
         bennesUsineTranspot.addLast(benne);
         this.pf=pf;
         this.pu=pu;
+        this.petriActrions=petriActrions;
+
     }
     public void run(){
         while (monObs.travail){

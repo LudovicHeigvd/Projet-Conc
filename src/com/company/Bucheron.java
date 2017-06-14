@@ -17,12 +17,13 @@ public class Bucheron extends Thread
 {
     private LinkedList<Benne> bennesARemplir;
     private LinkedList<Benne> bennesATransporter;
+    private LinkedList<Integer> petriActrions;
     private Lock lockRemplir = new ReentrantLock();
     private Lock lockPrendreBenne = new ReentrantLock();
     private Observateur monObs;
     private int id;
     ParkingForet pf;
-    public Bucheron(int id, ParkingForet pf,LinkedList<Benne> bennesForetRemplir,LinkedList<Benne> bennesUsineTranspot,Observateur obs) {
+    public Bucheron(int id, ParkingForet pf,LinkedList<Benne> bennesForetRemplir,LinkedList<Benne> bennesUsineTranspot,LinkedList<Integer> petriActrions,Observateur obs) {
         this.bennesARemplir =bennesForetRemplir;
         this.bennesATransporter =bennesUsineTranspot;
         this.monObs=obs;
@@ -30,6 +31,8 @@ public class Bucheron extends Thread
         this.bennesARemplir.addLast(benne);
         this.id =id;
         this.pf=pf;
+        this.petriActrions= petriActrions;
+
     }
     public void run() {
         int tours = 0;

@@ -10,11 +10,8 @@ public  class  Benne
 {
     private int max =250;
     private int capacity;
-    private Lock lockbennePlein = new ReentrantLock();
-    private Lock lockbenneVide = new ReentrantLock();
-    private Lock lockaddTronc = new ReentrantLock();
-    private Lock lockRemoveTronc = new ReentrantLock();
-    private Lock lockGetcapacity = new ReentrantLock();
+    private Lock lockbenne = new ReentrantLock();
+
     public Benne(int capacity)
     {
        this.capacity =capacity;
@@ -26,55 +23,55 @@ public  class  Benne
 
     public int GetCapcity()
     {
-        lockGetcapacity.lock();
+        lockbenne.lock();
         try
         {
             return capacity;
         }
     finally {
-            lockGetcapacity.unlock();
+            lockbenne.unlock();
         }
     }
     public  boolean Ispleine()
     {
-        lockbennePlein.lock();
+        lockbenne.lock();
         try
         {
             return this.capacity == max;
         }
         finally {
-            lockbennePlein.unlock();
+            lockbenne.unlock();
         }
 
     }
     public  boolean IsVIde()
     {
-        lockbenneVide.lock();
+        lockbenne.lock();
         try {
             return this.capacity == 0;
         }
         finally {
-            lockbenneVide.unlock();
+            lockbenne.unlock();
         }
     }
     public   void Addtronc(int kilos)
     {
-        lockaddTronc.lock();
+        lockbenne.lock();
         try {
             capacity = capacity+ kilos;
         }
         finally {
-            lockaddTronc.unlock();
+            lockbenne.unlock();
         }
     }
     public  void Removetronc(int kilos)
     {
-        lockRemoveTronc.lock();
+        lockbenne.lock();
         try {
             capacity = capacity-kilos;
         }
         finally {
-            lockRemoveTronc.unlock();
+            lockbenne.unlock();
         }
     }
 }

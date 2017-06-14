@@ -9,10 +9,8 @@ public class Main {
         ParkingForet pf = new ParkingForet();
         ParkingUsine pu = new ParkingUsine();
         Random random = new Random();
-
-
         for (int i = 0; i <= random.nextInt(15); i ++) {
-            Bucheron mathilde = new Bucheron(i,pf,obs.bennesForetRemplir, obs.bennesUsineTranspot, obs);
+            Bucheron mathilde = new Bucheron(i,pf,obs.bennesForetRemplir, obs.bennesUsineTranspot, obs.petriActrions ,obs);
             mathilde.start();
         }
 
@@ -21,17 +19,18 @@ public class Main {
                     obs.bennesForetRemplir,
                     obs. bennesForetTransport,
                     obs. bennesUsineVider,
-                    obs. bennesUsineTranspot);
+                    obs. bennesUsineTranspot,obs.petriActrions);
             bertrand.start();
         }
 
         for (int i = 0; i <= random.nextInt(15); i ++) {
-            Ouvrier robert = new Ouvrier(i,pu,obs.bennesUsineVider, obs.bennesForetTransport, obs);
+            Ouvrier robert = new Ouvrier(i,pu,obs.bennesUsineVider, obs.bennesForetTransport,obs.petriActrions, obs);
             robert.start();
         }
         for(int i = 0; i <= random.nextInt(15); i++) {
             Benne ben = new Benne(i);
             obs.bennesForetRemplir.addLast(ben);
         }
+
     }
 }

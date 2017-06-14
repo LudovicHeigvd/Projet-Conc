@@ -13,12 +13,13 @@ public class Ouvrier extends Thread
 {
     private LinkedList<Benne> bennesAvider;
     private LinkedList<Benne> bennesATransporter;
+    LinkedList<Integer> petriActrions;
     private Observateur monObs;
     private Lock lockVider = new ReentrantLock();
     private Lock lockAvider = new ReentrantLock();
     private int id;
     private ParkingUsine pu;
-    public Ouvrier(int id,ParkingUsine pu,LinkedList<Benne> bennesUsineVider,LinkedList<Benne> bennesForetTransport,Observateur obs) {
+    public Ouvrier(int id,ParkingUsine pu,LinkedList<Benne> bennesUsineVider,LinkedList<Benne> bennesForetTransport,LinkedList<Integer> petriActrions,Observateur obs) {
         this.bennesAvider =bennesUsineVider;
         this.bennesATransporter =bennesForetTransport;
         this.monObs=obs;
@@ -26,6 +27,7 @@ public class Ouvrier extends Thread
         Benne benne = new Benne(monObs.GetCapacity());
         this.bennesAvider.addLast(benne);
         this.pu =pu;
+        this.petriActrions= petriActrions;
 
     }
     public void run() {
