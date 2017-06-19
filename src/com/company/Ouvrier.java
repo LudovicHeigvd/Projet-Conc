@@ -36,14 +36,14 @@ public class Ouvrier extends Thread
         {
             if(monObs.travail) {
                 try{
-                    System.out.println("l'ouvrier" +id+" travail");
-                //   monObs.ModifStatus(true,2);
+                 //   System.out.println("l'ouvrier" +id+" travail");
+
                     Thread.sleep((long) Math.ceil(Math.random() * 100));
                     if(monObs.travail)
                     {
                     ViderBenne();}
                      Thread.sleep((long) Math.ceil(Math.random() * 100));
-                    System.out.println("l'ouvrier"+id+" pose le bois dans la chaine de monage");
+                //    System.out.println("l'ouvrier"+id+" pose le bois dans la chaine de monage");
                 } catch (InterruptedException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
@@ -75,9 +75,11 @@ public class Ouvrier extends Thread
                     benne.Removetronc(25);
                     bennesAvider.addFirst(benne);
                     pu.TriOuvrier(bennesAvider);
+
                 } else {
-                    System.out.println("la benne est vide");
+               //     System.out.println("la benne est vide");
                     bennesATransporter.addLast(benne);
+                    petriActrions.add(5);
                     if (pu.trans.size() != 0) {
                         pu.essaiEchange(1, id);
                     }
@@ -92,10 +94,11 @@ public class Ouvrier extends Thread
     }
     private   void ViderBenne() {
         pu.lockTrilisteOuvrier.lock();
-        System.out.println("l 'ouvrier"+id+" vide la benne");
+      //  System.out.println("l 'ouvrier"+id+" vide la benne");
         try {
             if (bennesAvider.size() != 0) {
-                Benne ben = (Benne) bennesAvider.getFirst();
+                Benne ben=null;
+                ben = (Benne) bennesAvider.getFirst();
                 bennesAvider.removeFirst();
                 Vider(ben);
             } else {

@@ -20,6 +20,7 @@ public class Bucheron extends Thread
     private LinkedList<Integer> petriActrions;
     private Lock lockRemplir = new ReentrantLock();
     private Lock lockPrendreBenne = new ReentrantLock();
+    private Lock lockTrilisteBcheron = new ReentrantLock();
     private Observateur monObs;
     private int id;
     ParkingForet pf;
@@ -41,11 +42,11 @@ public class Bucheron extends Thread
             if(monObs.travail) {
                 try{
                    // monObs.ModifStatus(true,0);
-                    System.out.println("le bucheron "+id+" coupe du bois");
+                //    System.out.println("le bucheron "+id+" coupe du bois");
                     Thread.sleep((long) Math.ceil(Math.random() * 100));//couper du bois
-                    System.out.println("le bucheron" +id+" amène le bois vers la benne");
+                 //   System.out.println("le bucheron" +id+" amène le bois vers la benne");
                     Thread.sleep((long) Math.ceil(Math.random() * 100));//aème le bois vers la beine
-                    System.out.println("le bucheron"+id+" remplis la benne");
+                 //   System.out.println("le bucheron"+id+" remplis la benne");
                     if(monObs.travail)
                     {
                     Prendrebenne();}
@@ -73,23 +74,29 @@ public class Bucheron extends Thread
     }
     private void Remplir(Benne benne)
     {
-        pf.lockTrilisteBcheron.lock();
+        lockTrilisteBcheron.lock();
         try {
             if (!benne.Ispleine()) {
                 benne.Addtronc(25);
                 bennesARemplir.addFirst(benne);
                 pf.Tribucheron(bennesARemplir);
 
+
             } else {
                 bennesATransporter.addLast(benne);
-                System.out.println("la benne est remplie par le bucheron"+id);
+               // System.out.println("la benne est remplie par le bucheron"+id);
+                petriActrions.add(1);
                  pf.essaiEchange(1,id);
 
             }
         }
+        catch (Exception e)
+        {
+           // e.getMessage();
+        }
         finally {
           //  TriBenne(bennesARemplir);
-            pf.lockTrilisteBcheron.unlock();
+            lockTrilisteBcheron.unlock();
 
         }
     }
@@ -97,7 +104,8 @@ public class Bucheron extends Thread
         lockPrendreBenne.lock();
         try {
             if (bennesARemplir.size() != 0) {
-                Benne ben = (Benne) bennesARemplir.getFirst();
+                Benne ben=null;
+                ben = (Benne) bennesARemplir.getFirst();
                 bennesARemplir.removeFirst();
                 Remplir(ben);
             } else {
@@ -105,7 +113,12 @@ public class Bucheron extends Thread
                 pf.essaiEchange(1, id);
 
             }
-        } finally {
+        }
+        catch (Exception e)
+        {
+          //  e.getMessage();
+        }
+        finally {
             lockPrendreBenne.unlock();
         }
     }

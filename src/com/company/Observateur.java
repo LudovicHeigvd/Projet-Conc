@@ -21,7 +21,7 @@ public class Observateur {
     public LinkedList<Benne> bennesUsineVider = new LinkedList<Benne>();
     public LinkedList<Benne> bennesUsineTranspot = new LinkedList<Benne>();
     public LinkedList<Integer> petriActrions = new LinkedList<Integer>();
-
+    public int nbBenne;
     public  int GetCapacity()
     {
         return capacity;

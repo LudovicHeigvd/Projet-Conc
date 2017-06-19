@@ -52,14 +52,21 @@ public class Transporteur extends Thread
                 Benne benne = null;
                 //monObs.ModifStatus(true,1);
                 benne=AmmarerBuecheron();
+                petriActrions.add(0);
                 if(monObs.travail) {
                     TransportToOuvrier(benne);
+                    petriActrions.add(2);
                 }
                 if(monObs.travail) {
+                    petriActrions.add(3);
                     AmareAtOuvrier();
+                    petriActrions.add(4);
                 }
                 if(monObs.travail) {
+                    petriActrions.add(6);
                     TransportToBucheron(benne);
+                   petriActrions.add(7);
+
                 }
 
             } catch (InterruptedException e) {
@@ -67,8 +74,8 @@ public class Transporteur extends Thread
             }
             tours ++;
         }
-        System.out.println("fin du transporteur"+id);
-        System.out.println("le transporteur"+id+" a fait "+tours+" nb tour");
+      System.out.println("fin du transporteur"+id);
+      System.out.println("le transporteur"+id+" a fait "+tours+" nb tour");
         if(pf.bobs.size()!=0) {
             pf.LastEchange(0);
         }
@@ -81,10 +88,10 @@ public class Transporteur extends Thread
     private Benne AmmarerBuecheron()throws InterruptedException  {
         lockAmmarrerBucheron.lock();
         try {
-            System.out.println(" le transporteur"+id+" amène la benne en forêt");
+         //   System.out.println(" le transporteur"+id+" amène la benne en forêt");
             Thread.sleep((long) Math.ceil(Math.random() * 100));
             Benne benne =null;
-            while (bennesUsineTranspot.size() == 0) {
+            while (bennesUsineTranspot.isEmpty()) {
                // monObs.ModifStatus(false, 1);
                 if(!monObs.travail)
                 {
@@ -93,7 +100,7 @@ public class Transporteur extends Thread
                 pf.essaiEchange(0,id);
             }
             bennesUsine:
-            if(bennesUsineTranspot.size()>0) {
+            if(!bennesUsineTranspot.isEmpty()) {
                 benne = bennesUsineTranspot.getFirst();
                 bennesUsineTranspot.removeFirst();
             }
@@ -111,7 +118,7 @@ public class Transporteur extends Thread
     private  void TransportToOuvrier(Benne benne)throws InterruptedException{
         pu.lockTrilisteOuvrier.lock();
         try {
-            System.out.println(" le transporteur"+id+" donne la benne à l'ouvrier");
+         //   System.out.println(" le transporteur"+id+" donne la benne à l'ouvrier");
             Thread.sleep((long) Math.ceil(Math.random() * 100));
             bennesUsineVider.addLast(benne);
             if (pu.ouvs.size() != 0) {
@@ -127,10 +134,10 @@ public class Transporteur extends Thread
         lockAmmarrerOuvrier.lock();
         try {
             Thread.sleep((long) Math.ceil(Math.random() * 100));
-            System.out.println(" le transporteur"+id+" prends la benne vide dans l'usine");
+        //    System.out.println(" le transporteur"+id+" prends la benne vide dans l'usine");
             Benne benne =null;
 
-            while (bennesForetTransport.size() == 0) {
+            while (bennesForetTransport.isEmpty()) {
               //  monObs.ModifStatus(false, 1);
 
                 if(!monObs.travail)
@@ -141,7 +148,7 @@ public class Transporteur extends Thread
             }
             bennevide:
             try {
-                if (bennesForetTransport.size() > 0) {
+                if (!bennesForetTransport.isEmpty()) {
                     benne = bennesForetTransport.getFirst();
                     bennesForetTransport.removeFirst();
                 } else {
@@ -162,7 +169,7 @@ public class Transporteur extends Thread
         pf.lockTrilisteBcheron.lock();
         try {
             Thread.sleep((long) Math.ceil(Math.random() * 100));
-            System.out.println(" le transporteur"+id+" amène la benne vide chez le bucheron");
+          // System.out.println(" le transporteur"+id+" amène la benne vide chez le bucheron");
             bennesForetRemplir.addLast(benne);
             if (pf.bobs.size() !=0 ) {
                 pf.essaiEchange(0,id);

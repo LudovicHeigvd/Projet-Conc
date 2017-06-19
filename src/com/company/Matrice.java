@@ -10,12 +10,13 @@ public class Matrice
     public ReentrantLock lockmatrice = new ReentrantLock();
    // int impressionMatriceTousLesXEvenements = 50;
     //int impressionMatrice = 1;
-
+    private Observateur obs;
     public int[][] matricePetriPreincident= new int[8][8];
     public int[][] matricePetriPosincident = new int[8][8];
     public int[] evolveMatrice= new int[8];
-    public Matrice()
+    public Matrice(Observateur obs)
     {
+        this.obs=obs;
       for (int i = 0; i < 8; i++)
       {
           for (int j = 0; j < 8; j++)
@@ -44,7 +45,22 @@ public class Matrice
             }
         }
         for (int i = 0; i < 8; i++) {
-            evolveMatrice[i] = 0;
+            if(i==0)
+            {
+                evolveMatrice[i]=obs.nbBenne+1;
+            }
+            else if(i==2)
+            {
+                evolveMatrice[i]=1;
+            }
+            else if(i==5)
+            {
+                evolveMatrice[i]=1;
+            }
+            else
+            {
+                evolveMatrice[i]=0;
+            }
         }
     }
   public  void printMatrice(int[][] matrice) {
@@ -61,9 +77,40 @@ public class Matrice
             lockmatrice.unlock();
         }
     }
-    public  void ParcoursMatrice(int element)
-    {
-
+    public  int DestroyCreate(int element) {
+        lockmatrice.lock();
+        try {
+            int transition = 0, actor = 0;
+            for (int j = 0; j < 8; j++) {
+                if (matricePetriPreincident[element][j] == 1) {
+                    transition = j;
+                    break;
+                }
+            }
+            for (int j = 0; j < 8; j++) {
+                //System.out.printf("%d", matricePetriPosincident[transition][j]);
+                if (matricePetriPosincident[transition][j] == 1) {
+                    actor = j;
+                    break;
+                }
+            }
+            return actor;
+        }
+        finally {
+            lockmatrice.unlock();
+        }
     }
-    
+    public  void printArray(int[]matrice) {
+        lockmatrice.lock();
+        try {
+            for (int i = 0; i < matrice.length; i++) {
+                System.out.printf("%d", matrice[i]);
+            }
+            System.out.println();
+        }
+        finally {
+            lockmatrice.unlock();
+        }
+    }
+
 }
